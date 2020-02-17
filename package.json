@@ -7,7 +7,6 @@
     "posttest": "npm run format",
     "format": "prettier --loglevel warn --write \"**/*.{js,css,md,html,json}\""
   },
-  "keywords": [],
   "author": "Robin Millette <robin@millette.info> (http://robin.millette.info/)",
   "license": "AGPL-3.0",
   "devDependencies": {
@@ -22,5 +21,19 @@
   },
   "lint-staged": {
     "*.{js,css,md,html,json}": "prettier --write"
+  },
+  "dependencies": {
+    "deepmerge": "^4.2.2",
+    "hast-util-sanitize": "^2.0.1",
+    "mdast-normalize-headings": "^1.0.2",
+    "rehype-sanitize": "^3.0.0",
+    "rehype-stringify": "^6.0.1",
+    "remark-attr": "^0.9.0",
+    "remark-parse": "^7.0.2",
+    "remark-rehype": "^5.0.0",
+    "to-vfile": "^6.0.0",
+    "unified": "^8.4.2",
+    "vfile": "^4.0.2",
+    "vfile-reporter": "^6.0.0"
   }
 }
