@@ -2,6 +2,7 @@ node_modules/
 .idea/
 .vscode/
 .parcel-cache/
+dist/
 *.sublime-project
 *.sublime-workspace
 *.log
