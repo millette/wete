@@ -1,10 +1,9 @@
 {
   "name": "wete",
   "version": "0.0.0",
-  "main": "index.js",
   "scripts": {
-    "dev": "parcel index.html",
-    "build": "parcel build --no-source-maps index.html",
+    "dev": "parcel --log-level info --no-autoinstall index.html",
+    "build": "parcel build --log-level info --no-source-maps index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "posttest": "npm run format",
     "format": "prettier --loglevel warn --write \"**/*.{js,css,md,html,json}\""
@@ -15,7 +14,8 @@
     "husky": "^4.2.3",
     "lint-staged": "^10.0.7",
     "parcel": "^2.0.0-nightly.114",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "sass": "^1.25.0"
   },
   "husky": {
     "hooks": {
