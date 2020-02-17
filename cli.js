@@ -11,10 +11,23 @@ const contents = `[le link](/){data-embed}
 The _thing_ it's.
 `
 
-// trFile("content/i2.md")
-trFile({ path: "i2.md", contents })
+trFile({ path: "content/i666.md", contents })
   .then((f) => {
-    console.log(f.history)
+    console.log(1, f.history)
     console.log(report(f))
   })
-  .catch((ee) => console.error("EEEE", ee))
+  .catch((ee) => console.error("EEEE1", ee))
+
+trFile("content/i2.md")
+  .then((f) => {
+    console.log(2, f.history)
+    console.log(report(f))
+  })
+  .catch((ee) => console.error("EEEE2", ee))
+
+trFile("content/i2.md")
+  .then((f) => {
+    console.log(3, f.history)
+    console.log(report(f))
+  })
+  .catch((ee) => console.error("EEEE3", ee))

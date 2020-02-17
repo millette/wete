@@ -21,37 +21,37 @@ const move = (options) => {
   }
 }
 
-const embedder = () => (tree, file) => {
-  if (!file.contents) throw new Error("empty")
-  visit(tree, (node) => {
-    if (
-      node.type === "link" &&
-      node.data &&
-      node.data.hProperties &&
-      node.data.hProperties["data-embed"] === ""
-    )
-      node.data.hProperties["data-embed"] = true
-  })
+const visitor = (node) => {
+  if (
+    node.type === "link" &&
+    node.data &&
+    node.data.hProperties &&
+    node.data.hProperties["data-embed"] === ""
+  )
+    node.data.hProperties["data-embed"] = true
 }
 
-const trFile = (() => {
-  const a = ["data-embed"]
-  const mdOpts = { footnotes: true, gfm: true, commonmark: true }
-  const process = unified()
-    .use(markdown, mdOpts)
-    .use(remarkAttr, { scope: "extended", extend: { link: a } })
-    .use(move, { extname: ".html" })
-    .use(embedder)
-    .use(remark2rehype, mdOpts)
-    .use(html, mdOpts)
-    .use(sanitize, merge(gh, { attributes: { a } })).process
+const embedder = () => (tree, file) => {
+  if (!file.contents) throw new Error("empty")
+  visit(tree, visitor)
+}
 
-  return async (fn) => {
-    const a = typeof fn === "string" ? await vfile.read(fn) : new vfile(fn)
-    const b = await process(a)
-    await vfile.write(b)
-    return b
-  }
-})()
+const a = ["data-embed"]
+const mdOpts = { footnotes: true, gfm: true, commonmark: true }
+const process = unified()
+  .use(markdown, mdOpts)
+  .use(remarkAttr, { scope: "extended", extend: { link: a } })
+  .use(move, { extname: ".html" })
+  .use(embedder)
+  .use(remark2rehype, mdOpts)
+  .use(html, mdOpts)
+  .use(sanitize, merge(gh, { attributes: { a } })).process
+
+const trFile = async (fn) => {
+  const a = typeof fn === "string" ? await vfile.read(fn) : new vfile(fn)
+  const b = await process(a)
+  await vfile.write(b)
+  return b
+}
 
 module.exports = trFile
