@@ -26,6 +26,7 @@
     "*.{js,css,md,html,json}": "prettier --write"
   },
   "dependencies": {
+    "bulma": "^0.8.0",
     "deepmerge": "^4.2.2",
     "hast-util-sanitize": "^2.0.1",
     "mdast-normalize-headings": "^1.0.2",
