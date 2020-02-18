@@ -2,10 +2,11 @@
 
 // npm
 const vfile = require("to-vfile")
-const visit = require("unist-util-visit")
+// const visit = require("unist-util-visit")
 const unified = require("unified")
 const markdown = require("remark-parse")
 const remark2rehype = require("remark-rehype")
+const rehype2remark = require("rehype-remark")
 const html = require("rehype-stringify")
 const remarkAttr = require("remark-attr")
 const sanitize = require("rehype-sanitize")
@@ -21,6 +22,7 @@ const move = (options) => {
   }
 }
 
+/*
 const visitor = (node) => {
   if (
     node.type === "link" &&
@@ -35,6 +37,7 @@ const embedder = () => (tree, file) => {
   if (!file.contents) throw new Error("empty")
   visit(tree, visitor)
 }
+*/
 
 const a = ["data-embed"]
 const mdOpts = { footnotes: true, gfm: true, commonmark: true }
@@ -42,7 +45,7 @@ const process = unified()
   .use(markdown, mdOpts)
   .use(remarkAttr, { scope: "extended", extend: { link: a } })
   .use(move, { extname: ".html" })
-  .use(embedder)
+  // .use(embedder)
   .use(remark2rehype, mdOpts)
   .use(html, mdOpts)
   .use(sanitize, merge(gh, { attributes: { a } })).process
