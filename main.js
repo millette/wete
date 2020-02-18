@@ -27,21 +27,10 @@ const editor = init({
       .catch(console.error)
   },
   defaultParagraphSeparator: "p",
-  styleWithCSS: true,
   actions: [
     "ulist",
     "bold",
-    "underline",
-    {
-      name: "italic",
-      result: () => exec("italic"),
-    },
-    {
-      name: "backColor",
-      icon: '<div style="background-color:pink;">A</div>',
-      title: "Highlight Color",
-      result: () => exec("backColor", "pink"),
-    },
+    "italic",
     {
       name: "image",
       result: () => {
@@ -53,17 +42,14 @@ const editor = init({
       name: "link",
       result: () => {
         const url = window.prompt("Enter the link URL")
-        if (url) {
-          const x = exec("createLink", url)
-          console.log("XXX", x)
-        }
+        if (url) exec("createLink", url)
       },
     },
   ],
   classes: {
     // actionbar: 'pell-actionbar-custom-name',
     // button: 'pell-button-custom-name',
-    // content: 'pell-content-custom-name',
+    content: "pell-content content",
     // selected: 'pell-button-selected-custom-name'
   },
 })
