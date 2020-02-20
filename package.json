@@ -30,6 +30,7 @@
     "deepmerge": "^4.2.2",
     "hast-util-sanitize": "^2.0.1",
     "mdast-normalize-headings": "^1.0.2",
+    "neverland": "^3.1.7",
     "pell": "^1.0.6",
     "rehype-dom-parse": "^2.0.1",
     "rehype-parse": "^6.0.2",
