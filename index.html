@@ -7,22 +7,28 @@
     <link rel="stylesheet" type="text/css" href="/style.scss" />
   </head>
   <body>
+    <section class="hero is-primary is-bold">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">wete (site name)</h1>
+          <h2 class="subtitle">Home (page name)</h2>
+        </div>
+      </div>
+    </section>
+
     <section class="section">
       <div class="container">
-        <header>
-          <h1 class="title">wete</h1>
-          <div id="cnt">
-            <p><a href="/yo" data-embed>Initial</a></p>
-          </div>
-          <div id="editor" class="pell"></div>
+        <div id="cnt">
+          <p><a href="/yo" data-embed>Initial</a></p>
+        </div>
+        <div id="editor" class="pell"></div>
 
+        <hr />
+        <div>
+          HTML output:
           <hr />
-          <div>
-            HTML output:
-            <hr />
-            <div id="html-output" style="white-space: pre-wrap;"></div>
-          </div>
-        </header>
+          <div id="html-output" style="white-space: pre-wrap;"></div>
+        </div>
         <div id="root" />
       </div>
     </section>

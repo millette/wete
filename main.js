@@ -3,13 +3,31 @@ import { exec, init } from "pell/src/pell"
 
 // self
 import h2m from "./h2m"
+/*
+import cry from "./crypto"
 
 console.log("hi")
 
-/*
-init({
-  element: document.querySelector('#ed')
+const enc = new TextEncoder()
+
+cry()
+.then(({ publicKey, privateKey }) => {
+  const a = JSON.stringify(publicKey).length
+  const b = JSON.stringify(privateKey).length
+
+  window.crypto.subtle.sign(
+    {name:"ECDSA", hash: "SHA-256"},
+    privateKey,
+    enc.encode("it went very well")
+  )
+  .then((g) => {
+    console.log("GGG-t", typeof g)
+    console.log("GGG", g)
+  })
+  return [a, b]
 })
+.then(console.log)
+.catch(console.error)
 */
 
 const element = document.getElementById("editor")
@@ -20,6 +38,7 @@ const cnt = cntEl.innerHTML
 const editor = init({
   element,
   onChange: (html) => {
+    // textContent = html
     h2m(html)
       .then((x) => {
         document.getElementById("html-output").textContent = x.contents
