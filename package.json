@@ -13,7 +13,7 @@
   "devDependencies": {
     "husky": "^4.2.3",
     "lint-staged": "^10.0.7",
-    "parcel": "^2.0.0-nightly.117",
+    "parcel": "^2.0.0-nightly.118",
     "prettier": "^1.19.1",
     "sass": "^1.25.0"
   },
