@@ -1,8 +1,99 @@
 // npm
-import { exec, init } from "pell/src/pell"
+// import { exec, init } from "pell/src/pell"
+import { neverland as $, render, html, useState } from "neverland"
+// import { html as h2 } from 'lighterhtml'
+
+const $isConnected = document.getElementById("is-connected")
+// const orig2 = $isConnected.cloneNode()
+
+/*
+// const tada = $($isConnected)
+const tada = html`<p>Bobobo</p>`
+
+const x = render($isConnected, tada)
+
+console.log("XXX1")
+console.log(x)
+console.log("XXX2", typeof x)
+console.log("XXX3", Object.keys(x))
+*/
+
+const Connected = $(() => {
+  const [connected, setConnected] = useState("joe")
+  console.log("PING", connected)
+  // console.log("PING", initialState, connected)
+  // const orig = html.for(orig2.innerHTML)
+
+  const con = (ev) => {
+    ev.preventDefault()
+    console.log("DONG", connected)
+    setConnected("")
+  }
+
+  // if (!connected) return html`<p>Thing</p>`
+  if (!connected)
+    return html`
+      <div id="is-connected" class="buttons">
+        <button class="button is-primary">
+          <strong>Sign up</strong>
+        </button>
+        <button class="button is-light" onclick=${() => setConnected("robin")}>
+          Log in
+        </button>
+      </div>
+    `
+
+  return html`
+    <button onclick=${con} class="button is-warning">
+      Logout (${connected})
+    </button>
+  `
+})
+
+render($isConnected, Connected("robin")) // "robin"
+
+// const tada = h2.node($isConnected.innerHTML)
+
+/*
+const tada = $isConnected.innerHTML
+console.log("TADA", tada)
+render($isConnected, tada)
+*/
+
+/*
+const Counter = $((initialState) => {
+  const [count, setCount] = useState(initialState)
+  return html`
+  <button onclick=${() => setCount(count + 1)}>
+    Count: ${count}
+  </button>`
+})
+
+const heha = document.getElementById("heha")
+
+const theThing = () => html`
+  <div>
+    A bounce of counters.<hr>
+    ${Counter(0)} ${Counter(1)}
+  </div>
+`
+
+render(heha, theThing())
+*/
+
+// basic example, show two independent counters
+
+/*
+render(heha, html`
+  <div>
+    A bounce of counters.<hr>
+    ${Counter(0)} ${Counter(1)}
+  </div>
+`)
+*/
 
 // self
-import h2m from "./h2m"
+// import h2m from "./h2m"
 /*
 import cry from "./crypto"
 
@@ -30,6 +121,7 @@ cry()
 .catch(console.error)
 */
 
+/*
 const element = document.getElementById("editor")
 const cntEl = document.getElementById("cnt")
 const cnt = cntEl.innerHTML
@@ -78,3 +170,4 @@ const editor = init({
 // editor.content.innerHTML = '<b><u><i><a href="/yo" data-embed>Initial</a> content!</i></u></b>'
 
 editor.content.innerHTML = cnt
+*/
