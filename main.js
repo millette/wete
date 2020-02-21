@@ -18,13 +18,40 @@ console.log("XXX2", typeof x)
 console.log("XXX3", Object.keys(x))
 */
 
+todo($isConnected)
+// todo(document.body.lastChild)
+
+function todo(node, items = []) {
+  render(
+    node,
+    html`
+      <ul>
+        ${items.map(
+          (what, i) => html`
+            <li data-i=${i} onclick=${remove}>${what}</li>
+          `
+        )}
+      </ul>
+      <button onclick=${add}>add</button>
+    `
+  )
+  function add() {
+    items.push(prompt("do"))
+    todo(node, items)
+  }
+  function remove(e) {
+    items.splice(e.currentTarget.dataset.i, 1)
+    todo(node, items)
+  }
+}
+
 const Connected = $(() => {
-  const [connected, setConnected] = useState("joe")
+  const [connected, setConnected] = useState("")
   console.log("PING", connected)
   // console.log("PING", initialState, connected)
   // const orig = html.for(orig2.innerHTML)
 
-  const con = (ev) => {
+  const discon = (ev) => {
     ev.preventDefault()
     console.log("DONG", connected)
     setConnected("")
@@ -44,13 +71,14 @@ const Connected = $(() => {
     `
 
   return html`
-    <button onclick=${con} class="button is-warning">
+    <button onclick=${discon} class="button is-warning">
       Logout (${connected})
     </button>
   `
 })
 
-render($isConnected, Connected("robin")) // "robin"
+// const zaza = html`<div>There ${Connected("robin")}</div>`
+// render($isConnected, zaza) // "robin"
 
 // const tada = h2.node($isConnected.innerHTML)
 
