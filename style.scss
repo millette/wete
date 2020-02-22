@@ -1,2 +1,22 @@
 @use "node_modules/pell/src/pell";
-@use "node_modules/bulma/bulma";
+@import "node_modules/bulma/bulma";
+
+// @import "node_modules/bulma/sass/components/tabs";
+
+#app-actions {
+  margin-top: -2rem;
+  margin-bottom: 1rem;
+}
+
+.pell-content {
+  height: auto;
+  padding: 0;
+}
+
+.is-active {
+  .rym-bg {
+    padding: 0 0.25rem;
+    background: $body-background-color; // white; // $tabs-link-active-color;
+    color: $tabs-link-active-color; // $tabs-toggle-link-active-background-color;
+  }
+}
