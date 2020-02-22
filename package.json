@@ -28,7 +28,8 @@
     "*.{js,css,md,html,json}": "prettier --write"
   },
   "dependencies": {
-    "bulma": "^0.8.0",
+    "bulma": "^0.7.5",
+    "bulmaswatch": "^0.7.5",
     "deepmerge": "^4.2.2",
     "hast-util-sanitize": "^2.0.1",
     "js-cookie": "^2.2.1",
