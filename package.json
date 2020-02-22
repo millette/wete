@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "parcel --log-level info --no-autoinstall index.html",
     "build": "parcel build --log-level info --no-source-maps index.html",
+    "deploy": "parcel build --log-level info --no-source-maps --public-url /wete index.html && gh-pages -d dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "posttest": "npm run format",
     "format": "prettier --loglevel warn --write \"**/*.{js,css,md,html,json}\""
