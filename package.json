@@ -31,7 +31,7 @@
     "hast-util-sanitize": "^2.0.1",
     "js-cookie": "^2.2.1",
     "lighterhtml": "^2.0.9",
-    "mdast-normalize-headings": "^1.0.2",
+    "mdast-normalize-headings": "^2.0.0",
     "neverland": "^3.1.7",
     "pell": "^1.0.6",
     "rehype-dom-parse": "^2.0.1",
