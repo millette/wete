@@ -1,9 +1,11 @@
 // npm
-// import { exec, init } from "pell/src/pell"
+import { exec, init } from "pell/src/pell"
 import { neverland as $, render, html, useState, useEffect } from "neverland"
 // import { html as h2 } from 'lighterhtml'
 // import { render, html } from "lighterhtml"
 import Cookies from "js-cookie"
+
+let elEditor
 
 // getCookie
 // const verifyCookie = (name) => {
@@ -42,18 +44,80 @@ const Actions = $((un) => {
     document.getElementById("cnt").style = aa
       ? "display: none"
       : "display: block"
+
+    if (!aa) {
+      const $pel = document.querySelector(".pell")
+      if ($pel) {
+        $pel.parentNode.removeChild($pel)
+      }
+      return
+    }
+
+    const $par = document.getElementById("cnt").parentNode
+    if ($par.querySelector(".pell")) return
+
+    const element = document.createElement("div")
+    element.className = "pell"
+    $par.appendChild(element)
+
+    elEditor = init({
+      element,
+      onChange: (html) => {
+        // textContent = html
+        h2m(html)
+          .then((x) => {
+            document.getElementById("html-output").textContent = x.contents
+          })
+          .catch(console.error)
+      },
+      defaultParagraphSeparator: "p",
+      actions: [
+        "ulist",
+        "bold",
+        "italic",
+        {
+          name: "image",
+          result: () => {
+            const url = window.prompt("Enter the image URL")
+            if (url) exec("insertImage", url)
+          },
+        },
+        {
+          name: "link",
+          result: () => {
+            const url = window.prompt("Enter the link URL")
+            if (url) exec("createLink", url)
+          },
+        },
+      ],
+      classes: {
+        // actionbar: 'pell-actionbar-custom-name',
+        // button: 'pell-button-custom-name',
+        content: "pell-content content",
+        // selected: 'pell-button-selected-custom-name'
+      },
+    })
+    elEditor.content.innerHTML = document.getElementById("cnt").innerHTML
   }, [aa])
 
   const clickEdit = (ev) => {
-    if (aa) return
     ev.preventDefault()
+    if (aa) {
+      console.log("MUST SAVE")
+      console.log(elEditor)
+      console.log(elEditor.content.innerHTML)
+      console.log(Object.keys(elEditor))
+      bb(false)
+      document.getElementById("cnt").innerHTML = elEditor.content.innerHTML
+      return
+    }
     console.log("clickEdit")
     bb(true)
   }
 
   const clickView = (ev) => {
-    if (!aa) return
     ev.preventDefault()
+    if (!aa) return
     console.log("clickView")
     bb(false)
   }
@@ -67,9 +131,10 @@ const Actions = $((un) => {
         <li class=${aa ? "" : "is-active"}>
           <a onclick=${clickView} href="#">${aa ? "Cancel" : "View"}</a>
         </li>
+        <li><a href="#">Export</a></li>
         <li class=${aa ? "is-active" : ""}>
           <a href="#" onclick=${clickEdit}
-            >Edit&nbsp;<small>(as ${un})</small></a
+            >${aa ? "Save" : "Edit"}&nbsp;<small>(as ${un})</small></a
           >
         </li>
       </ul>
