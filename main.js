@@ -134,7 +134,9 @@ const Actions = $((un) => {
         <li><a href="#">Export</a></li>
         <li class=${aa ? "is-active" : ""}>
           <a href="#" onclick=${clickEdit}
-            >${aa ? "Save" : "Edit"}&nbsp;<small>(as ${un})</small></a
+            >${aa ? "Save" : "Edit"}&nbsp;<small class="rym-bg"
+              >as 👤 ${un}</small
+            ></a
           >
         </li>
       </ul>
@@ -209,17 +211,20 @@ const Connected = () => {
   }
 
   const yup = html`
-    <button onclick=${discon} class="button is-warning">
-      Logout (${username})
-    </button>
+    <div id="is-connected" class="buttons">
+      <div class="button is-static">👤 ${username}</div>
+      <button onclick=${discon} class="button is-warning">
+        Logout
+      </button>
+    </div>
   `
 
   const nope = html`
     <div id="is-connected" class="buttons">
-      <button class="button is-primary">
-        <strong>Sign up</strong>
+      <button class="button is-info">
+        Sign up
       </button>
-      <button class="button is-light" onclick=${con}>
+      <button class="button is-success" onclick=${con}>
         Log in
       </button>
     </div>
