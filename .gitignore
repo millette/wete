@@ -8,3 +8,10 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+content/
+f222.html
+i2.html
+index-orig.html
+main-orig.js
+n.js
+output/

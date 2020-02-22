@@ -13,7 +13,7 @@
   "devDependencies": {
     "husky": "^4.2.3",
     "lint-staged": "^10.0.7",
-    "parcel": "^2.0.0-nightly.117",
+    "parcel": "^2.0.0-nightly.119",
     "prettier": "^1.19.1",
     "sass": "^1.25.0"
   },
@@ -29,7 +29,10 @@
     "bulma": "^0.8.0",
     "deepmerge": "^4.2.2",
     "hast-util-sanitize": "^2.0.1",
-    "mdast-normalize-headings": "^1.0.2",
+    "js-cookie": "^2.2.1",
+    "lighterhtml": "^2.0.9",
+    "mdast-normalize-headings": "^2.0.0",
+    "neverland": "^3.1.7",
     "pell": "^1.0.6",
     "rehype-dom-parse": "^2.0.1",
     "rehype-parse": "^6.0.2",
