@@ -11,6 +11,7 @@
   "author": "Robin Millette <robin@millette.info> (http://robin.millette.info/)",
   "license": "AGPL-3.0",
   "devDependencies": {
+    "gh-pages": "^2.2.0",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.7",
     "parcel": "^2.0.0-nightly.119",
