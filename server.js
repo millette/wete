@@ -9,6 +9,14 @@ const tad = require("./tadam")
 // npm
 const fastify = require("fastify")()
 fastify.register(require("fastify-cookie"))
+fastify.register(require("fastify-static"), {
+  root: [__dirname, "dist"].join("/"),
+})
+
+const staticPaths = {
+  "style.css": "style.044f2d48.css",
+  "main.js": "main.707d6e68.js",
+}
 
 fastify.get("/", (request, reply) => {
   console.log(request.headers.cookie)
@@ -16,17 +24,27 @@ fastify.get("/", (request, reply) => {
   reply.send("hi")
 })
 
+fastify.get("/static/:path", (request, reply) => {
+  console.log("GOT PATH", request.params.path)
+  // reply.sendFile("style.044f2d48.css")
+  if (staticPaths[request.params.path])
+    return reply.sendFile(staticPaths[request.params.path])
+  reply.code(404).send("Not found.")
+})
+
+/*
 fastify.get("/style.css", (request, reply) => {
-  reply.type("text/css").send(fs.readFileSync("dist/style.044f2d48.css"))
+  reply.sendFile("style.044f2d48.css")
 })
 
 fastify.get("/main.js", (request, reply) => {
-  reply
-    .type("application/javascript")
-    .send(fs.readFileSync("dist/main.707d6e68.js"))
+  reply.sendFile("main.707d6e68.js")
 })
+*/
 
-fastify.get("/wiki", (request, reply) => {
+fastify.get("/:page", (request, reply) => {
+  console.log("WIKIPAGE", request.params.page)
+
   const ttt = tad("html title", "el page title", fs.readFileSync("wiki.html"))
   reply.type("text/html").send(ttt)
 })
