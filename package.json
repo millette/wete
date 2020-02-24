@@ -36,6 +36,7 @@
     "fastify": "^2.12.0",
     "fastify-cookie": "^3.6.0",
     "hast-util-sanitize": "^2.0.1",
+    "hast-util-select": "^3.0.1",
     "js-cookie": "^2.2.1",
     "lighterhtml": "^2.0.9",
     "mdast-normalize-headings": "^2.0.0",
@@ -52,6 +53,7 @@
     "remark-stringify": "^7.0.4",
     "to-vfile": "^6.0.0",
     "unified": "^8.4.2",
+    "unist-util-select": "^3.0.1",
     "unist-util-visit": "^2.0.2",
     "vfile": "^4.0.2",
     "vfile-reporter": "^6.0.0"
