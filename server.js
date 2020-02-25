@@ -8,14 +8,19 @@ const tad = require("./tadam")
 
 // npm
 const fastify = require("fastify")()
-fastify.register(require("fastify-cookie"))
+
+fastify.register(require("fastify-cookie"), {
+  secret: "rarara",
+})
+
 fastify.register(require("fastify-static"), {
   root: [__dirname, "dist"].join("/"),
 })
 
+// FIXME: match automatically with parcel filenames
 const staticPaths = {
   "style.css": "style.044f2d48.css",
-  "main.js": "main.707d6e68.js",
+  "main.js": "main.6d156e88.js",
 }
 
 fastify.setErrorHandler((error, request, reply) => {
@@ -31,9 +36,23 @@ fastify.setErrorHandler((error, request, reply) => {
 })
 
 fastify.get("/", (request, reply) => {
-  console.log(request.headers.cookie)
-  console.log("conn", request.cookies.connected)
+  // console.log(request.headers.cookie)
+  // console.log("conn", request.cookies.connected)
   reply.send("hi")
+})
+
+fastify.post("/api/login", (request, reply) => {
+  const name = request.body.name
+  // console.log(request.headers.cookie)
+  // console.log("conn", request.cookies.connected)
+  // console.log(typeof request.body, request.body)
+  // console.log("NAME", name)
+  reply
+    .setCookie("connected", name, {
+      signed: true,
+      path: "/",
+    })
+    .send({ name, hi: "there" })
 })
 
 fastify.get("/static/:path", (request, reply) => {
