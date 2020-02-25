@@ -1,7 +1,7 @@
 "use strict"
 
 // core
-const fs = require("fs")
+const fs = require("fs").promises
 
 // self
 const tad = require("./tadam")
@@ -18,6 +18,18 @@ const staticPaths = {
   "main.js": "main.707d6e68.js",
 }
 
+fastify.setErrorHandler((error, request, reply) => {
+  if (error.code === "ENOENT") return reply.code(404).send(error)
+  if (error.statusCode >= 500) {
+    fastify.log.error(error)
+  } else if (error.statusCode >= 400) {
+    fastify.log.info(error)
+  } else {
+    fastify.log.error(error)
+  }
+  reply.send(error)
+})
+
 fastify.get("/", (request, reply) => {
   console.log(request.headers.cookie)
   console.log("conn", request.cookies.connected)
@@ -25,8 +37,6 @@ fastify.get("/", (request, reply) => {
 })
 
 fastify.get("/static/:path", (request, reply) => {
-  console.log("GOT PATH", request.params.path)
-  // reply.sendFile("style.044f2d48.css")
   if (staticPaths[request.params.path])
     return reply.sendFile(staticPaths[request.params.path])
   reply.code(404).send("Not found.")
@@ -42,11 +52,11 @@ fastify.get("/main.js", (request, reply) => {
 })
 */
 
-fastify.get("/:page", (request, reply) => {
-  console.log("WIKIPAGE", request.params.page)
-
-  const ttt = tad("html title", "el page title", fs.readFileSync("wiki.html"))
-  reply.type("text/html").send(ttt)
+fastify.get("/:page", async (request, reply) => {
+  const page = request.params.page
+  const cnt = await fs.readFile(`${page}.html`)
+  reply.type("text/html")
+  return tad(`${page} - wete`, `${page} - wete`, cnt)
 })
 
 // Run the server!
