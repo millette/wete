@@ -139,12 +139,48 @@ const hideActions = () => {
   if ($p) $p.parentNode.removeChild($p)
 }
 
+const getUsername = () => {
+  const n = Cookies.get("connected")
+  // Cookies.get(name)
+  // console.log("NN", typeof n, n)
+  if (!n) return
+  const [username] = n.split(".")
+  // console.log("NNU", username)
+  return username
+}
+
 const Connected = () => {
-  const username = getCookie("connected")
+  // const [username] = getCookie("connected").split(".")
+  const username = getUsername()
 
   const con = () => {
-    Cookies.set("connected", "bob")
-    Connected()
+    // Cookies.set("connected", "bob")
+    const name = window.prompt("Username")
+    if (!name) return
+
+    fetch("/api/login", {
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "post",
+      body: JSON.stringify({
+        name,
+        password: "ok",
+      }),
+    })
+      .then((res) => res.json())
+      .then(Connected)
+      /*
+    .then((json) => {
+      console.log("YAY", json.name)
+      // document.cookie.connected = json.hi
+      // Cookies.set("connected", json.name)
+      Connected()
+    })
+    */
+      // .then(Connected)
+      .catch(console.error)
   }
 
   const discon = () => {
