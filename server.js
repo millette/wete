@@ -7,7 +7,9 @@ const fs = require("fs").promises
 const tad = require("./tadam")
 
 // npm
-const fastify = require("fastify")()
+const fastify = require("fastify")({
+  logger: true,
+})
 
 fastify.register(require("fastify-cookie"), {
   secret: "rarara",
@@ -24,6 +26,7 @@ const staticPaths = {
 }
 
 fastify.setErrorHandler((error, request, reply) => {
+  console.log("GOT ERROR", error)
   if (error.code === "ENOENT") return reply.code(404).send(error)
   if (error.statusCode >= 500) {
     fastify.log.error(error)
@@ -39,6 +42,15 @@ fastify.get("/", (request, reply) => {
   // console.log(request.headers.cookie)
   // console.log("conn", request.cookies.connected)
   reply.send("hi")
+})
+
+fastify.post("/:page", async (request, reply) => {
+  const connected = reply.unsignCookie(request.cookies.connected || "")
+  if (!connected) {
+    reply.code(401)
+    throw new Error("Please login")
+  }
+  return { my: "me", connected }
 })
 
 fastify.post("/api/login", (request, reply) => {
@@ -60,16 +72,6 @@ fastify.get("/static/:path", (request, reply) => {
     return reply.sendFile(staticPaths[request.params.path])
   reply.code(404).send("Not found.")
 })
-
-/*
-fastify.get("/style.css", (request, reply) => {
-  reply.sendFile("style.044f2d48.css")
-})
-
-fastify.get("/main.js", (request, reply) => {
-  reply.sendFile("main.707d6e68.js")
-})
-*/
 
 fastify.get("/:page", async (request, reply) => {
   const page = request.params.page
