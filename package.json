@@ -17,7 +17,7 @@
     "gh-pages": "^2.2.0",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.7",
-    "parcel": "^2.0.0-nightly.119",
+    "parcel": "^2.0.0-nightly.120",
     "prettier": "^1.19.1",
     "sass": "^1.25.0"
   },
