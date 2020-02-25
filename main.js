@@ -189,23 +189,19 @@ const Connected = () => {
   }
 
   const yup = html`
-    <div id="is-connected" class="buttons">
-      <div class="button is-static">👤 ${username}</div>
-      <button onclick=${discon} class="button is-warning">
-        Logout
-      </button>
-    </div>
+    <div class="button is-static">👤 ${username}</div>
+    <button onclick=${discon} class="button is-warning">
+      Logout
+    </button>
   `
 
   const nope = html`
-    <div id="is-connected" class="buttons">
-      <button class="button is-info">
-        Sign up
-      </button>
-      <button class="button is-success" onclick=${con}>
-        Log in
-      </button>
-    </div>
+    <button class="button is-info">
+      Sign up
+    </button>
+    <button class="button is-success" onclick=${con}>
+      Log in
+    </button>
   `
 
   if (username) {
