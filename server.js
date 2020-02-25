@@ -75,7 +75,7 @@ fastify.get("/:page", async (request, reply) => {
   const page = request.params.page
   const cnt = await fs.readFile(`${page}.html`)
   reply.type("text/html")
-  return tad(`${page} - wete`, `${page} - wete`, cnt)
+  return tad(`${page} - wete`, page, cnt)
 })
 
 // Run the server!
