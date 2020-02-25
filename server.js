@@ -11,6 +11,8 @@ const fastify = require("fastify")({
   logger: true,
 })
 
+fastify.register(require("fastify-compress"))
+
 fastify.register(require("fastify-cookie"), {
   secret: "rarara",
 })
@@ -26,7 +28,7 @@ const staticPaths = {
 }
 
 fastify.setErrorHandler((error, request, reply) => {
-  console.log("GOT ERROR", error)
+  // console.log("GOT ERROR", error)
   if (error.code === "ENOENT") return reply.code(404).send(error)
   if (error.statusCode >= 500) {
     fastify.log.error(error)
@@ -38,11 +40,11 @@ fastify.setErrorHandler((error, request, reply) => {
   reply.send(error)
 })
 
-fastify.get("/", (request, reply) => {
-  // console.log(request.headers.cookie)
-  // console.log("conn", request.cookies.connected)
-  reply.send("hi")
-})
+fastify.get("/favicon.ico", (request, reply) =>
+  reply.code(404).send("Not found.")
+)
+
+fastify.get("/", (request, reply) => reply.send("hi"))
 
 fastify.post("/:page", async (request, reply) => {
   const connected = reply.unsignCookie(request.cookies.connected || "")
