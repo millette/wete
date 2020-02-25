@@ -7,6 +7,7 @@ const fs = require("fs").promises
 const tad = require("./tadam")
 
 // npm
+require("dotenv-safe").config()
 const fastify = require("fastify")({
   logger: true,
 })
@@ -14,7 +15,7 @@ const fastify = require("fastify")({
 fastify.register(require("fastify-compress"))
 
 fastify.register(require("fastify-cookie"), {
-  secret: "rarara",
+  secret: process.env.SECRET,
 })
 
 fastify.register(require("fastify-static"), {
@@ -23,8 +24,8 @@ fastify.register(require("fastify-static"), {
 
 // FIXME: match automatically with parcel filenames
 const staticPaths = {
-  "style.css": "style.044f2d48.css",
-  "main.js": "main.6d156e88.js",
+  "style.css": process.env.CSS,
+  "main.js": process.env.JS,
 }
 
 fastify.setErrorHandler((error, request, reply) => {
