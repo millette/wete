@@ -8,11 +8,23 @@ const tad = require("./tadam")
 
 // npm
 require("dotenv-safe").config()
+// FIXME: match automatically with parcel filenames
+const staticPaths = {
+  "style.css": process.env.CSS,
+  "main.js": process.env.JS,
+}
+
 const fastify = require("fastify")({
   logger: true,
 })
 
 fastify.register(require("fastify-compress"))
+fastify.register(require("fastify-leveldb"), {
+  name: "db",
+  options: {
+    valueEncoding: "json",
+  },
+})
 
 fastify.register(require("fastify-cookie"), {
   secret: process.env.SECRET,
@@ -22,14 +34,7 @@ fastify.register(require("fastify-static"), {
   root: [__dirname, "dist"].join("/"),
 })
 
-// FIXME: match automatically with parcel filenames
-const staticPaths = {
-  "style.css": process.env.CSS,
-  "main.js": process.env.JS,
-}
-
 fastify.setErrorHandler((error, request, reply) => {
-  // console.log("GOT ERROR", error)
   if (error.code === "ENOENT") return reply.code(404).send(error)
   if (error.statusCode >= 500) {
     fastify.log.error(error)
@@ -45,7 +50,19 @@ fastify.get("/favicon.ico", (request, reply) =>
   reply.code(404).send("Not found.")
 )
 
-fastify.get("/", (request, reply) => reply.send("hi"))
+fastify.get("/", async (request, reply) => {
+  // reply.send("hi")
+
+  const ok = await fastify.level.put("user:bob", {
+    fee: "foo",
+    password: "yup",
+  })
+  console.log("BOB-put", ok)
+
+  const bob = await fastify.level.get("user:bob")
+  console.log("BOB", bob)
+  return "hi"
+})
 
 fastify.post("/:page", async (request, reply) => {
   const connected = reply.unsignCookie(request.cookies.connected || "")
@@ -60,15 +77,22 @@ fastify.post("/:page", async (request, reply) => {
   return { page, len: cnt.length, connected }
 })
 
-fastify.post("/api/login", async (request, reply) => {
-  const name = request.body.name
-  const password = request.body.password
-
-  if (password !== "ok") {
+// FIXME: hashing, of course
+const checkUserPassword = async (request, reply) => {
+  try {
+    const name = request.body.name
+    const { password } = await fastify.level.get(["user", name].join(":"))
+    if (password === request.body.password) return name
+    throw new Error("Credentials don't match.")
+  } catch (e) {
+    fastify.log.error(e)
     reply.code(401)
     throw new Error("Credentials don't match.")
   }
+}
 
+fastify.post("/api/login", async (request, reply) => {
+  const name = await checkUserPassword(request, reply)
   reply.setCookie("connected", name, {
     signed: true,
     path: "/",
