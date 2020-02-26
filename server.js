@@ -54,8 +54,10 @@ fastify.post("/:page", async (request, reply) => {
     throw new Error("Please login")
   }
   const page = request.params.page
-  const len = request.body.cnt && request.body.cnt.length
-  return { page, len, my: "me", connected }
+  const cnt = request.body.cnt
+  if (!cnt) throw new Error("Missing content.")
+  await fs.writeFile(`written/${page}.html`, cnt)
+  return { page, len: cnt.length, connected }
 })
 
 fastify.post("/api/login", async (request, reply) => {
@@ -82,7 +84,7 @@ fastify.get("/static/:path", (request, reply) => {
 
 fastify.get("/:page", async (request, reply) => {
   const page = request.params.page
-  const cnt = await fs.readFile(`${page}.html`)
+  const cnt = await fs.readFile(`written/${page}.html`)
   reply.type("text/html")
   return tad(`${page} - wete`, page, cnt)
 })
