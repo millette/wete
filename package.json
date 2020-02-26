@@ -30,6 +30,8 @@
     "*.{js,css,md,html,json}": "prettier --write"
   },
   "dependencies": {
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
     "bulma": "^0.7.5",
     "bulmaswatch": "^0.7.5",
     "deepmerge": "^4.2.2",
@@ -55,6 +57,8 @@
     "remark-parse": "^7.0.2",
     "remark-rehype": "^5.0.0",
     "remark-stringify": "^7.0.4",
+    "rollup": "^1.31.1",
+    "rollup-plugin-terser": "^5.2.0",
     "to-vfile": "^6.0.0",
     "unified": "^8.4.2",
     "unist-util-select": "^3.0.1",
