@@ -53,7 +53,9 @@ fastify.post("/:page", async (request, reply) => {
     reply.code(401)
     throw new Error("Please login")
   }
-  return { my: "me", connected }
+  const page = request.params.page
+  const len = request.body.cnt && request.body.cnt.length
+  return { page, len, my: "me", connected }
 })
 
 fastify.post("/api/login", async (request, reply) => {
