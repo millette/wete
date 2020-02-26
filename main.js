@@ -156,7 +156,8 @@ const Connected = () => {
   const con = () => {
     // Cookies.set("connected", "bob")
     const name = window.prompt("Username")
-    if (!name) return
+    const password = window.prompt("Password")
+    if (!name || !password) return
 
     fetch("/api/login", {
       credentials: "include",
@@ -166,11 +167,14 @@ const Connected = () => {
       method: "post",
       body: JSON.stringify({
         name,
-        password: "ok",
+        password,
       }),
     })
-      .then((res) => res.json())
-      .then(Connected)
+      .then((res) => Promise.all([res.json(), res.ok]))
+      .then(([json, ok]) => {
+        console.log("JSON-LOGIN-RESPONSE", ok, json)
+        if (ok) Connected()
+      })
       /*
     .then((json) => {
       console.log("YAY", json.name)
