@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "clean": "rm -fr .parcel-cache dist",
-    "purgecss": "purgecss --css dist/style.*.css --content dist/index.html dist/main.*.js -o dist",
+    "css": "sass -s compressed style.scss style-sassed.css",
+    "purgecss": "purgecss --css style-sassed.css --content dist/index.html dist/main.min.js -o dist/",
+    "purgecss-parcel": "purgecss --css dist/style.*.css --content dist/index.html dist/main.*.js -o dist",
     "dev": "parcel --log-level info --no-autoinstall index.html",
     "build": "rollup -c rollup.config.js",
     "build-parcel": "parcel build --log-level info --no-source-maps index.html",
