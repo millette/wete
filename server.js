@@ -56,18 +56,20 @@ fastify.post("/:page", async (request, reply) => {
   return { my: "me", connected }
 })
 
-fastify.post("/api/login", (request, reply) => {
+fastify.post("/api/login", async (request, reply) => {
   const name = request.body.name
-  // console.log(request.headers.cookie)
-  // console.log("conn", request.cookies.connected)
-  // console.log(typeof request.body, request.body)
-  // console.log("NAME", name)
-  reply
-    .setCookie("connected", name, {
-      signed: true,
-      path: "/",
-    })
-    .send({ name, hi: "there" })
+  const password = request.body.password
+
+  if (password !== "ok") {
+    reply.code(401)
+    throw new Error("Credentials don't match.")
+  }
+
+  reply.setCookie("connected", name, {
+    signed: true,
+    path: "/",
+  })
+  return { name, hi: "there" }
 })
 
 fastify.get("/static/:path", (request, reply) => {
