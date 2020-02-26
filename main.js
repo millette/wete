@@ -87,7 +87,8 @@ const Actions = $((un) => {
   const clickEdit = (ev) => {
     ev.preventDefault()
     if (aa) {
-      console.log("MUST SAVE", window.location.pathname)
+      const page = window.location.pathname
+      console.log("MUST SAVE", page)
       // console.log(elEditor)
       // console.log(elEditor.content.innerHTML)
       console.log(Object.keys(elEditor))
@@ -95,7 +96,7 @@ const Actions = $((un) => {
       const cnt = elEditor.content.innerHTML
       document.getElementById("cnt").innerHTML = cnt
 
-      fetch("/ikiw", {
+      fetch(page, {
         credentials: "include",
         headers: {
           "content-type": "application/json",
