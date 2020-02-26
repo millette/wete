@@ -3,30 +3,18 @@ import { exec, init } from "pell/src/pell"
 import { neverland as $, render, html, useState, useEffect } from "neverland"
 import Cookies from "js-cookie"
 
-let elEditor
-
-// getCookie
-// const verifyCookie = (name) => {
-const getCookie = (name) => {
-  // Cookies.get(`${name}-signed`)
-  // check signature using public key
-  // if bad, remove it
-  // Cookies.remove(name)
-  // Cookies.remove(`${name}-signed`)
-  return Cookies.get(name)
-}
+// let elEditor
 
 const Actions = $((un) => {
-  const [aa, bb] = useState()
-  console.log("PING-Actions", aa)
+  let elEditor
+  const [editing, setEditing] = useState()
 
   useEffect(() => {
-    console.log("EFFECT", aa)
-    document.getElementById("cnt").style = aa
+    document.getElementById("cnt").style = editing
       ? "display: none"
       : "display: block"
 
-    if (!aa) {
+    if (!editing) {
       const $pel = document.querySelector(".pell")
       if ($pel) {
         $pel.parentNode.removeChild($pel)
@@ -43,17 +31,7 @@ const Actions = $((un) => {
 
     elEditor = init({
       element,
-      onChange: (html) => {
-        console.log("CHANGE", html && html.length)
-        /*
-        // textContent = html
-        h2m(html)
-          .then((x) => {
-            document.getElementById("html-output").textContent = x.contents
-          })
-          .catch(console.error)
-        */
-      },
+      onChange: () => false,
       defaultParagraphSeparator: "p",
       actions: [
         "ulist",
@@ -82,46 +60,35 @@ const Actions = $((un) => {
       },
     })
     elEditor.content.innerHTML = document.getElementById("cnt").innerHTML
-  }, [aa])
+  }, [editing])
 
   const clickEdit = (ev) => {
     ev.preventDefault()
-    if (aa) {
-      const page = window.location.pathname
-      console.log("MUST SAVE", page)
-      // console.log(elEditor)
-      // console.log(elEditor.content.innerHTML)
-      console.log(Object.keys(elEditor))
-      bb(false)
-      const cnt = elEditor.content.innerHTML
-      document.getElementById("cnt").innerHTML = cnt
+    if (!editing) return setEditing(true)
+    const page = window.location.pathname
+    const cnt = elEditor.content.innerHTML
+    document.getElementById("cnt").innerHTML = cnt
 
-      fetch(page, {
-        credentials: "include",
-        headers: {
-          "content-type": "application/json",
-        },
-        method: "post",
-        body: JSON.stringify({ cnt }),
+    fetch(page, {
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "post",
+      body: JSON.stringify({ cnt }),
+    })
+      .then((res) => Promise.all([res.json(), res.ok]))
+      .then(([json, ok]) => {
+        console.log("JSON-SAVE-RESPONSE", ok, json)
+        setEditing(!ok)
       })
-        .then((res) => Promise.all([res.json(), res.ok]))
-        .then(([json, ok]) => {
-          console.log("JSON-SAVE-RESPONSE", ok, json)
-          // if (ok) Connected()
-        })
-        .catch(console.error)
-
-      return
-    }
-    console.log("clickEdit")
-    bb(true)
+      .catch(console.error)
   }
 
   const clickView = (ev) => {
     ev.preventDefault()
-    if (!aa) return
-    console.log("clickView")
-    bb(false)
+    if (!editing) return
+    setEditing(false)
   }
 
   const c = html`
@@ -130,13 +97,13 @@ const Actions = $((un) => {
       class="tabs is-toggle is-toggle-rounded is-right is-large"
     >
       <ul>
-        <li class=${aa ? "" : "is-active"}>
-          <a onclick=${clickView} href="#">${aa ? "Cancel" : "View"}</a>
+        <li class=${editing ? "" : "is-active"}>
+          <a onclick=${clickView} href="#">${editing ? "Cancel" : "View"}</a>
         </li>
         <li><a href="#">Export</a></li>
-        <li class=${aa ? "is-active" : ""}>
+        <li class=${editing ? "is-active" : ""}>
           <a href="#" onclick=${clickEdit}
-            >${aa ? "Save" : "Edit"}&nbsp;<small class="rym-bg"
+            >${editing ? "Save" : "Edit"}&nbsp;<small class="rym-bg"
               >as 👤 ${un}</small
             ></a
           >
@@ -162,20 +129,15 @@ const hideActions = () => {
 
 const getUsername = () => {
   const n = Cookies.get("connected")
-  // Cookies.get(name)
-  // console.log("NN", typeof n, n)
   if (!n) return
   const [username] = n.split(".")
-  // console.log("NNU", username)
   return username
 }
 
 const Connected = () => {
-  // const [username] = getCookie("connected").split(".")
   const username = getUsername()
 
   const con = () => {
-    // Cookies.set("connected", "bob")
     const name = window.prompt("Username")
     const password = window.prompt("Password")
     if (!name || !password) return
@@ -193,18 +155,8 @@ const Connected = () => {
     })
       .then((res) => Promise.all([res.json(), res.ok]))
       .then(([json, ok]) => {
-        console.log("JSON-LOGIN-RESPONSE", ok, json)
         if (ok) Connected()
       })
-      /*
-    .then((json) => {
-      console.log("YAY", json.name)
-      // document.cookie.connected = json.hi
-      // Cookies.set("connected", json.name)
-      Connected()
-    })
-    */
-      // .then(Connected)
       .catch(console.error)
   }
 

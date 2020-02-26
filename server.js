@@ -14,6 +14,20 @@ const staticPaths = {
   "main.js": process.env.JS,
 }
 
+// FIXME: hashing, of course
+const checkUserPassword = async (request, reply) => {
+  try {
+    const name = request.body.name
+    const { password } = await fastify.level.get(["user", name].join(":"))
+    if (password === request.body.password) return name
+    throw new Error("Credentials don't match.")
+  } catch (e) {
+    fastify.log.error(e)
+    reply.code(401)
+    throw new Error("Credentials don't match.")
+  }
+}
+
 const fastify = require("fastify")({
   logger: true,
 })
@@ -76,20 +90,6 @@ fastify.post("/:page", async (request, reply) => {
   await fs.writeFile(`written/${page}.html`, cnt)
   return { page, len: cnt.length, connected }
 })
-
-// FIXME: hashing, of course
-const checkUserPassword = async (request, reply) => {
-  try {
-    const name = request.body.name
-    const { password } = await fastify.level.get(["user", name].join(":"))
-    if (password === request.body.password) return name
-    throw new Error("Credentials don't match.")
-  } catch (e) {
-    fastify.log.error(e)
-    reply.code(401)
-    throw new Error("Credentials don't match.")
-  }
-}
 
 fastify.post("/api/login", async (request, reply) => {
   const name = await checkUserPassword(request, reply)
