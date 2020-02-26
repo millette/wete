@@ -78,19 +78,6 @@ fastify.get("/", async (request, reply) => {
   return "hi"
 })
 
-fastify.post("/:page", async (request, reply) => {
-  const connected = reply.unsignCookie(request.cookies.connected || "")
-  if (!connected) {
-    reply.code(401)
-    throw new Error("Please login")
-  }
-  const page = request.params.page
-  const cnt = request.body.cnt
-  if (!cnt) throw new Error("Missing content.")
-  await fs.writeFile(`written/${page}.html`, cnt)
-  return { page, len: cnt.length, connected }
-})
-
 fastify.post("/api/login", async (request, reply) => {
   const name = await checkUserPassword(request, reply)
   reply.setCookie("connected", name, {
@@ -108,9 +95,32 @@ fastify.get("/static/:path", (request, reply) => {
 
 fastify.get("/:page", async (request, reply) => {
   const page = request.params.page
-  const cnt = await fs.readFile(`written/${page}.html`)
+  // const cnt = await fs.readFile(`written/${page}.html`)
+  const { date, connected, cnt } = await fastify.level.get(
+    ["page", page].join(":")
+  )
+  console.log(date, connected, cnt.length)
+
   reply.type("text/html")
   return tad(`${page} - wete`, page, cnt)
+})
+
+fastify.post("/:page", async (request, reply) => {
+  const connected = reply.unsignCookie(request.cookies.connected || "")
+  if (!connected) {
+    reply.code(401)
+    throw new Error("Please login")
+  }
+  const page = request.params.page
+  const cnt = request.body.cnt
+  if (!cnt) throw new Error("Missing content.")
+  // await fs.writeFile(`written/${page}.html`, cnt)
+  await fastify.level.put(["page", page].join(":"), {
+    date: Date.now(),
+    connected,
+    cnt,
+  })
+  return { page, len: cnt.length, connected }
 })
 
 // Run the server!
