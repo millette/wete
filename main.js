@@ -44,12 +44,15 @@ const Actions = $((un) => {
     elEditor = init({
       element,
       onChange: (html) => {
+        console.log("CHANGE", html && html.length)
+        /*
         // textContent = html
         h2m(html)
           .then((x) => {
             document.getElementById("html-output").textContent = x.contents
           })
           .catch(console.error)
+        */
       },
       defaultParagraphSeparator: "p",
       actions: [
@@ -84,12 +87,29 @@ const Actions = $((un) => {
   const clickEdit = (ev) => {
     ev.preventDefault()
     if (aa) {
-      console.log("MUST SAVE")
-      console.log(elEditor)
-      console.log(elEditor.content.innerHTML)
+      console.log("MUST SAVE", window.location.pathname)
+      // console.log(elEditor)
+      // console.log(elEditor.content.innerHTML)
       console.log(Object.keys(elEditor))
       bb(false)
-      document.getElementById("cnt").innerHTML = elEditor.content.innerHTML
+      const cnt = elEditor.content.innerHTML
+      document.getElementById("cnt").innerHTML = cnt
+
+      fetch("/ikiw", {
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+        method: "post",
+        body: JSON.stringify({ cnt }),
+      })
+        .then((res) => Promise.all([res.json(), res.ok]))
+        .then(([json, ok]) => {
+          console.log("JSON-SAVE-RESPONSE", ok, json)
+          // if (ok) Connected()
+        })
+        .catch(console.error)
+
       return
     }
     console.log("clickEdit")
