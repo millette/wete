@@ -19,7 +19,7 @@
     "lint-staged": "^10.0.8",
     "parcel": "^2.0.0-nightly.120",
     "prettier": "^1.19.1",
-    "sass": "^1.26.0"
+    "sass": "^1.26.1"
   },
   "husky": {
     "hooks": {
