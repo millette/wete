@@ -2,6 +2,7 @@
   "name": "wete",
   "version": "0.0.0",
   "scripts": {
+    "start": "node server",
     "clean": "rm -fr .parcel-cache dist",
     "css": "sass -s compressed style.scss style-sassed.css",
     "purgecss": "purgecss --css style-sassed.css --content dist/index.html dist/main.min.js -o dist/",
