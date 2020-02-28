@@ -41,7 +41,7 @@ const embedder = () => (tree, file) => {
 
 const a = ["data-embed"]
 const mdOpts = { footnotes: true, gfm: true, commonmark: true }
-const process = unified()
+const processor = unified()
   .use(markdown, mdOpts)
   .use(remarkAttr, { scope: "extended", extend: { link: a } })
   .use(move, { extname: ".html" })
@@ -52,7 +52,7 @@ const process = unified()
 
 const trFile = async (fn) => {
   const a = typeof fn === "string" ? await vfile.read(fn) : new vfile(fn)
-  const b = await process(a)
+  const b = await processor(a)
   await vfile.write(b)
   return b
 }
