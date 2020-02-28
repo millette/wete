@@ -62,7 +62,7 @@
     "remark-parse": "^7.0.2",
     "remark-rehype": "^5.0.0",
     "remark-stringify": "^7.0.4",
-    "rollup": "^1.31.1",
+    "rollup": "^1.32.0",
     "rollup-plugin-terser": "^5.2.0",
     "to-vfile": "^6.0.0",
     "unified": "^8.4.2",
