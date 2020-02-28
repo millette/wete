@@ -40,7 +40,7 @@
     "bulmaswatch": "^0.7.5",
     "deepmerge": "^4.2.2",
     "dotenv-safe": "^8.2.0",
-    "fastify": "^2.12.0",
+    "fastify": "^2.12.1",
     "fastify-compress": "^2.0.1",
     "fastify-cookie": "^3.6.0",
     "fastify-leveldb": "millette/fastify-leveldb#fix-uncaught-init-errors",
