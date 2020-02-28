@@ -7,10 +7,10 @@ import rehype2remark from "rehype-remark"
 import sanitize from "rehype-sanitize"
 import stringify from "remark-stringify"
 
-const process = unified()
+const processor = unified()
   .use(parse)
   .use(sanitize)
   .use(rehype2remark)
   .use(stringify).process
 
-export default process
+export default processor
