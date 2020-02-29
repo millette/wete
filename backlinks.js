@@ -6,15 +6,11 @@ const fs = require("fs").promises
 // npm
 const level = require("level")
 const { toArray } = require("streamtoarray")
-const unified = require("unified")
-// const vfile = require("vfile")
 const reporter = require("vfile-reporter")
-const parse = require("rehype-parse")
-const sanitize = require("rehype-sanitize")
-const stringify = require("rehype-stringify")
 
 // self
-const yaya = require("./yaya")
+// const yaya = require("./yaya")
+const makeProcessor = require("./make-processor")
 
 const db = level("db", {
   valueEncoding: "json",
@@ -30,14 +26,6 @@ const getPrefixedKeys = async (elDb, prefix) => {
   })
   const arr = await toArray(str)
   return arr.map(slicer)
-}
-
-const makeProcessor = (allPages) => {
-  return unified()
-    .use(parse)
-    .use(sanitize)
-    .use(yaya, { allPages })
-    .use(stringify).process
 }
 
 const run = async () => {
