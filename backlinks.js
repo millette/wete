@@ -1,7 +1,7 @@
 "use strict"
 
 // core
-const fs = require("fs").promises
+// const fs = require("fs").promises
 
 // npm
 const level = require("level")
@@ -32,6 +32,14 @@ const run = async (pathname) => {
   if (!oy.internalLinks) oy.internalLinks = []
   if (!oy.externalLinks) oy.externalLinks = []
 
+  /*
+  oy.internalLinks.push({
+    href: "/wiki#tada",
+    page: "/wiki",
+    text: "rah rah"
+  })
+  */
+
   const processor = makeProcessor(allPages)
   const vfout = await processor({ pathname, contents })
 
@@ -41,11 +49,31 @@ const run = async (pathname) => {
   // console.log(JSON.stringify(vfout.data.yaya, null, 2))
   // console.log(vfout.data.yaya.externalLinks[0].properties.href)
 
+  const deletedBacklinks = []
+
+  oy.internalLinks.forEach((obj) => {
+    // console.log("DELETED?", obj)
+    if (
+      vfout.data.yaya.internalLinks
+        .filter(({ missing }) => !missing)
+        .map(({ page }) => page)
+        .indexOf(obj.page) === -1
+    )
+      deletedBacklinks.push(
+        ["backlink", obj.page.slice(1), pathname.slice(1)].join(":")
+      )
+  })
+
   const newLinks = []
   const newBacklinks = []
+
   vfout.data.yaya.internalLinks.forEach(({ missing, ...obj }) => {
+    // console.log("NEW???", missing, obj)
     newLinks.push(obj)
-    if (missing && oy.internalLinks.indexOf(obj.page) === -1)
+    if (
+      !missing &&
+      oy.internalLinks.map(({ page }) => page).indexOf(obj.page) === -1
+    )
       newBacklinks.push(
         ["backlink", obj.page.slice(1), pathname.slice(1)].join(":")
       )
@@ -71,6 +99,15 @@ const run = async (pathname) => {
     type: "put",
   }))
 
+  deletedBacklinks.forEach((x) => {
+    const zo = {
+      key: x,
+      type: "del",
+    }
+    // console.log("ZO", zo)
+    batch.push(zo)
+  })
+
   batch.push({
     type: "put",
     key: ["page", pathname.slice(1)].join(":"),
@@ -86,7 +123,8 @@ const run = async (pathname) => {
     value: newDoc,
   })
 
-  console.log("batch", JSON.stringify(batch, null, 2))
+  // console.log("batch", JSON.stringify(batch, null, 2))
+  return db.batch(batch)
 }
 
 // run("/ikiw").catch(console.error)
