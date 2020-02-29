@@ -18,7 +18,7 @@ const staticPaths = {
 const checkUserPassword = async (request, reply) => {
   try {
     const name = request.body.name
-    const { password } = await fastify.level.get(["user", name].join(":"))
+    const { password } = await fastify.level.get(["_user", name].join(":"))
     if (password === request.body.password) return name
     throw new Error("Credentials don't match.")
   } catch (e) {
@@ -67,13 +67,13 @@ fastify.get("/favicon.ico", (request, reply) =>
 fastify.get("/", async (request, reply) => {
   // reply.send("hi")
 
-  const ok = await fastify.level.put("user:bob", {
+  const ok = await fastify.level.put("_user:bob", {
     fee: "foo",
     password: "yup",
   })
   console.log("BOB-put", ok)
 
-  const bob = await fastify.level.get("user:bob")
+  const bob = await fastify.level.get("_user:bob")
   console.log("BOB", bob)
   return "hi"
 })
