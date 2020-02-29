@@ -3,6 +3,7 @@ const fs = require("fs").promises
 
 // npm
 const level = require("level")
+const { toArray } = require("streamtoarray")
 const unified = require("unified")
 const vfile = require("vfile")
 const reporter = require("vfile-reporter")
@@ -11,30 +12,32 @@ const sanitize = require("rehype-sanitize")
 const stringify = require("rehype-stringify")
 const { selectAll } = require("hast-util-select")
 
-/*
-console.log(vfile({stem:"wiki"}))
-{
-  data: {},
-  messages: [],
-  history: [ 'wiki' ],
-  cwd: '/home/millette/wete'
-}
-process.exit(1)
-*/
-
-// const baseUrl = new URL("http://localhost/")
-const baseUrl = new URL("file:")
-
 const db = level("db", {
   valueEncoding: "json",
 })
 
-const yaya = () => (tree, file) => {
+const getPrefixedKeys = async (elDb, prefix) => {
+  if (!prefix || !elDb) throw new Error("Missing args.")
+  const len = prefix.length + 1
+  const slicer = (id) => `/${id.slice(len)}`
+  const str = await elDb.createKeyStream({
+    gt: [prefix, ""].join(":"),
+    lt: [prefix, "\ufff0"].join(":"),
+  })
+  const arr = await toArray(str)
+  return arr.map(slicer)
+}
+
+const baseUrl = new URL("file:")
+
+const yaya = ({ allPages }) => (tree, file) => {
   currentPage = file.pathname
   file.data.yaya = {
     internalLinks: [],
     externalLinks: [],
   }
+
+  console.log("knowns", allPages)
 
   selectAll("a", tree).forEach(({ properties, children: [{ value }] }) => {
     if (!value)
@@ -44,6 +47,29 @@ const yaya = () => (tree, file) => {
 
     const href = new URL(properties.href, baseUrl)
     switch (href.protocol) {
+      case "file:":
+        // fix local links to start with /
+        // TODO: optional base path
+        if (properties.href[0] !== "/") properties.href = `/${properties.href}`
+        if (currentPage === href.pathname)
+          return file.info(`Skip link to self.`)
+
+        const missing = allPages.indexOf(href.pathname) === -1
+        if (missing) {
+          if (!properties.class) properties.class = []
+          properties.class.push("wiki-is-missing")
+        }
+
+        file.data.yaya.internalLinks.push({
+          missing,
+          properties: {
+            ...properties,
+            href,
+          },
+          value,
+        })
+        break
+
       case "http:":
       case "https:":
         // enhance external links
@@ -59,22 +85,6 @@ const yaya = () => (tree, file) => {
         })
         break
 
-      case "file:":
-        // fix local links to start with /
-        // TODO: optional base path
-        if (properties.href[0] !== "/") properties.href = `/${properties.href}`
-        if (currentPage === href.pathname)
-          return file.info(`Skip link to self.`)
-        file.data.yaya.internalLinks.push({
-          properties: {
-            ...properties,
-            href,
-          },
-          value,
-        })
-
-        break
-
       default:
         file.message(`Link protocol not supported: ${href.protocol}`)
         return
@@ -86,27 +96,45 @@ const yaya = () => (tree, file) => {
     file.info(`Found ${file.data.yaya.externalLinks.length} external links.`)
 }
 
+/*
 const process2 = unified()
   .use(parse)
   .use(sanitize)
   .use(yaya)
   .use(stringify).process
+*/
 
 const run = async () => {
   // const cnt = await fs.readFile("written/wiki.html", "utf-8")
-  const cnt = await fs.readFile("written/ikiw.html", "utf-8")
-  console.log(cnt.length)
+  // const cnt = await fs.readFile("written/ikiw.html", "utf-8")
 
-  // const oy = await db.get(["page", "ikiw"].join(":"))
-  // console.log(Object.keys(oy))
+  const allPages = await getPrefixedKeys(db, "page")
+
+  console.log("allPages:", allPages)
+
+  const { cnt, ...oy } = await db.get(["page", "ikiw"].join(":"))
+  console.log(oy)
+
+  if (!oy.internalLinks) oy.internalLinks = []
+  if (!oy.externalLinks) oy.externalLinks = []
+
+  console.log("original size", cnt.length)
 
   const vf = vfile({ pathname: "/ikiw", contents: cnt })
-  const vfout = await process2(vf)
+  // const vfout = await process2(vf)
+  const vfout = await unified()
+    .use(parse)
+    .use(sanitize)
+    .use(yaya, { allPages })
+    .use(stringify)
+    .process(vf)
   // const vfout = await process2(cnt)
   console.log(reporter(vfout))
-  console.log(vfout)
-  console.log(JSON.stringify(vfout.data, null, 2))
-  console.log(vfout.data.yaya.externalLinks[0].properties.href)
+  // console.log(vfout)
+  console.log("output size", vfout.contents.length)
+
+  console.log(JSON.stringify(vfout.data.yaya, null, 2))
+  // console.log(vfout.data.yaya.externalLinks[0].properties.href)
 }
 
 run().catch(console.error)
