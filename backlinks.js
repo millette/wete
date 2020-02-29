@@ -5,28 +5,15 @@ const fs = require("fs").promises
 
 // npm
 const level = require("level")
-const { toArray } = require("streamtoarray")
 const reporter = require("vfile-reporter")
 
 // self
-// const yaya = require("./yaya")
 const makeProcessor = require("./make-processor")
+const getPrefixedKeys = require("./get-prefixed-keys")
 
 const db = level("db", {
   valueEncoding: "json",
 })
-
-const getPrefixedKeys = async (elDb, prefix) => {
-  if (!prefix || !elDb) throw new Error("Missing args.")
-  const len = prefix.length + 1
-  const slicer = (id) => `/${id.slice(len)}`
-  const str = await elDb.createKeyStream({
-    gt: [prefix, ""].join(":"),
-    lt: [prefix, "\ufff0"].join(":"),
-  })
-  const arr = await toArray(str)
-  return arr.map(slicer)
-}
 
 const run = async () => {
   // const contents = await fs.readFile("written/wiki.html", "utf-8")
