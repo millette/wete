@@ -19,7 +19,7 @@ const run = async (pathname) => {
   // const contents = await fs.readFile(["written", pathname, ".html"].join(""), "utf-8")
 
   const allPages0 = await getPrefixedKeys(db, "page")
-  const allPages = allPages0.map((x) => `/${id}`)
+  const allPages = allPages0.map((id) => `/${id}`)
 
   console.log("allPages:", allPages)
 
