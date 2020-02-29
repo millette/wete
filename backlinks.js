@@ -18,7 +18,8 @@ const db = level("db", {
 const run = async (pathname) => {
   // const contents = await fs.readFile(["written", pathname, ".html"].join(""), "utf-8")
 
-  const allPages = await getPrefixedKeys(db, "page")
+  const allPages0 = await getPrefixedKeys(db, "page")
+  const allPages = allPages0.map((x) => `/${id}`)
 
   console.log("allPages:", allPages)
 
