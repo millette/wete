@@ -1,20 +1,17 @@
 "use strict"
 
 // self
-// const getPrefixedKeys = require("./get-prefixed-keys")
+const getPrefixedKeys = require("./get-prefixed-keys")
 
 // npm
 const level = require("level")
-const { toArray } = require("streamtoarray")
 
 const db = level("db", {
   valueEncoding: "json",
 })
 
-const lala = async () => {
-  const x = await db.createKeyStream()
-  const y = await toArray(x)
-  console.log(y)
-}
+const lala = () => getPrefixedKeys(db, "page")
 
-lala().catch(console.error)
+lala()
+  .then(console.log)
+  .catch(console.error)
