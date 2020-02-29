@@ -64,6 +64,7 @@
     "remark-stringify": "^7.0.4",
     "rollup": "^1.32.0",
     "rollup-plugin-terser": "^5.2.0",
+    "streamtoarray": "^3.0.0",
     "to-vfile": "^6.0.0",
     "unified": "^8.4.2",
     "unist-util-select": "^3.0.1",
