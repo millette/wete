@@ -22,10 +22,12 @@ const createNewDb = () =>
     level("db", { errorIfExists: true, valueEncoding: "json" }, done)
   })
 
+const type = "put"
+
 const createBacklink = (b, to, from) => {
   b.push({
-    type: "put",
-    key: ["backlink", to, from],
+    type,
+    key: ["backlink", to, from].join(":"),
     value: Date.now(),
   })
 }
@@ -35,22 +37,23 @@ const createPage = (b, editor, contents, page = "", more = {}) => {
   const key = ["page-version", page, date].join(":")
   b.push(
     {
-      type: "put",
+      type,
       key,
       value: {
-        ...more,
-        date,
+        internalLinks: [],
+        externalLinks: [],
         editor,
         contents,
+        ...more,
       },
     },
     {
-      type: "put",
+      type,
       key: ["page", page].join(":"),
       value: { key },
     },
     {
-      type: "put",
+      type,
       key: ["change", date, page].join(":"),
       value: true,
     }
@@ -73,7 +76,7 @@ const createSandbox = (b, editor) => {
 
 const createAdmin = (b, username, password) => {
   b.push({
-    type: "put",
+    type,
     key: ["_user", username].join(":"),
     value: {
       date: Date.now(),
@@ -156,8 +159,8 @@ const initDb = async () => {
     createSandbox(batch, admin)
     createBacklink(batch, "", "sandbox")
   }
-  return [db, batch]
-  // return db.batch(batch)
+  //return [db, batch]
+  return Promise.all([db, db.batch(batch)])
 }
 
 initDb()
