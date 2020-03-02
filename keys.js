@@ -10,7 +10,7 @@ const db = level("db", {
   valueEncoding: "json",
 })
 
-const lala = () => getPrefixedKeys(db)
+const lala = () => getPrefixedKeys(db, "page-version")
 
 lala()
   .then(console.log)
