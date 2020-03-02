@@ -11,15 +11,19 @@
     "build": "rollup -c rollup.config.js",
     "build-parcel": "parcel build --log-level info --no-source-maps index.html",
     "deploy": "parcel build --log-level info --no-source-maps --public-url /wete index.html && gh-pages -d dist",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run test:jest --",
     "posttest": "npm run format",
-    "format": "prettier --loglevel warn --write \"**/*.{js,css,md,html,json}\""
+    "format": "prettier --ignore-path .gitignore --loglevel warn --write \"**/*.{js,css,md,html,json}\"",
+    "test:jest": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "author": "Robin Millette <robin@millette.info> (http://robin.millette.info/)",
   "license": "AGPL-3.0",
   "devDependencies": {
     "gh-pages": "^2.2.0",
     "husky": "^4.2.3",
+    "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
     "parcel": "^2.0.0-nightly.131",
     "prettier": "^1.19.1",
