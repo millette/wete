@@ -9,12 +9,11 @@ const stringify = require("rehype-stringify")
 // self
 const yaya = require("./yaya")
 
-const makeProcessor = (allPages) => {
-  return unified()
+const makeProcessor = (allPages) =>
+  unified()
     .use(parse)
     .use(sanitize)
     .use(yaya, { allPages })
     .use(stringify).process
-}
 
 module.exports = makeProcessor
