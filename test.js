@@ -2,7 +2,7 @@
 
 const fofo = require("./fofo")
 
-test.skip("create page", async () => {
+test("create page", async () => {
   const doc = {
     editor: "bob",
     pathname: "",
@@ -32,10 +32,7 @@ test("update page", async () => {
     contents: "<p>Hello world",
   })
 
-  const {
-    data: { creator, createdAt, updatedAt },
-    contents,
-  } = await fofo.updatePage(
+  const newDoc = await fofo.updatePage(
     {
       contents: "<p>Hello <i>world",
       editor: "joe",
@@ -43,9 +40,58 @@ test("update page", async () => {
     },
     oldDoc
   )
+  const {
+    data: { editOf, creator, createdAt, updatedAt },
+    contents,
+  } = newDoc
+
+  const asBatch = fofo.doit(newDoc)
+  // console.log("NEWDOC", fofo.doit(newDoc))
 
   expect(contents).toBe("<p>Hello <i>world</i></p>")
   expect(creator).toBe(oldDoc.data.editor)
+  expect(editOf).toBe(oldDoc.data.updatedAt)
   expect(createdAt).toBe(oldDoc.data.updatedAt)
   expect(updatedAt > createdAt).toBeTruthy()
+
+  expect(asBatch.length).toBe(3)
+  expect(asBatch[0].key).toBe(asBatch[1].value)
+  expect(asBatch[1].key).toBe("page:")
 })
+
+/*
+test("update page", async () => {
+  const oldDoc = await fofo.updatePage({
+    updatedAt: 1583447300000,
+    editor: "bob",
+    pathname: "/",
+    contents: "<p>Hello world",
+  })
+
+  const newDoc = await fofo.updatePage(
+    {
+      contents: "<p>Hello <i>world",
+      editor: "joe",
+      pathname: "",
+    },
+    oldDoc
+  )
+  const {
+    data: { editOf, creator, createdAt, updatedAt },
+    contents,
+  } = newDoc
+
+  const asBatch = fofo.doit(newDoc)
+  // console.log("NEWDOC", fofo.doit(newDoc))
+
+  expect(contents).toBe("<p>Hello <i>world</i></p>")
+  expect(creator).toBe(oldDoc.data.editor)
+  expect(editOf).toBe(oldDoc.data.updatedAt)
+  expect(createdAt).toBe(oldDoc.data.updatedAt)
+  expect(updatedAt > createdAt).toBeTruthy()
+
+  expect(asBatch.length).toBe(3)
+  expect(asBatch[0].key).toBe(asBatch[1].value)
+  expect(asBatch[1].key).toBe("page:")
+})
+*/

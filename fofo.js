@@ -6,16 +6,42 @@ const Vfile = require("vfile")
 // self
 const makeProcessor = require("./make-processor")
 
+const prefixed = (p, ...rest) => [p, ...rest].join(":")
+
 const processor = makeProcessor()
 
 const vfile2obj = (vf) => {
-  if (!vf) return vf
+  // if (!vf) return vf
   if (!(vf instanceof Vfile)) throw new Error("Expecting Vfile.")
   return {
     ...vf.data,
     contents: vf.contents,
     pathname: vf.pathname,
   }
+}
+
+const doit = (vf) => {
+  const value = vfile2obj(vf)
+  const type = "put"
+  const page = value.pathname.slice(1)
+  const key = prefixed("page-version", page, value.updatedAt)
+  return [
+    {
+      type,
+      key,
+      value,
+    },
+    {
+      type,
+      key: prefixed("page", page),
+      value: key,
+    },
+    {
+      type,
+      key: prefixed("change", value.updatedAt, page),
+      value: value.editor,
+    },
+  ]
 }
 
 const obj2vfile = (doc) => {
@@ -53,9 +79,13 @@ const updatePage = async (newDoc, oldDoc) => {
   newDoc = obj2vfile(newDoc)
   newDoc.data.creator = oldDoc ? oldDoc.data.creator : newDoc.data.editor
   newDoc.data.createdAt = oldDoc ? oldDoc.data.createdAt : newDoc.data.updatedAt
+  if (oldDoc) newDoc.data.editOf = oldDoc.data.updatedAt
+
   return processor(newDoc)
 }
 
 module.exports = {
   updatePage,
+  vfile2obj,
+  doit,
 }
