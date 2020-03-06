@@ -5,11 +5,22 @@ const { selectAll } = require("hast-util-select")
 const baseUrl = new URL("file:")
 
 // npm
-const yaya = ({ allPages }) => (tree, file) => {
+// const yaya = ({ allPages = [] }) => (tree, file) => {
+const yaya = (opts = {}) => (tree, file) => {
+  // const { allPages } = opts
+  const allPages = opts.allPages
+    ? Array.isArray(opts.allPages)
+      ? new Set(opts.allPages)
+      : opts.allPages
+    : new Set()
+
   const currentPage = file.pathname
-  file.data.yaya = {
+  // allPages.push(currentPage)
+  allPages.add(currentPage)
+  file.data = {
     internalLinks: [],
     externalLinks: [],
+    ...file.data,
   }
 
   console.log("knowns", currentPage, allPages)
@@ -24,21 +35,28 @@ const yaya = ({ allPages }) => (tree, file) => {
       const href = new URL(properties.href, baseUrl)
       switch (href.protocol) {
         case "file:":
-          // fix local links to start with /
           // TODO: optional base path
-          if (properties.href[0] !== "/")
+          // fix local links to start with /
+          if (properties.href === ".") properties.href = "/"
+          else if (properties.href[0] !== "/")
             properties.href = `/${properties.href}`
-          if (currentPage === href.pathname)
-            return file.info(`Skip link to self.`)
 
-          const missing = allPages.indexOf(href.pathname) === -1
+          const selfLink = currentPage === href.pathname || undefined
+          // const missing = (allPages.indexOf(href.pathname) === -1) || undefined
+          const missing = !allPages.has(href.pathname) || undefined
           if (missing) {
             if (!properties.class) properties.class = []
             properties.class.push("wiki-is-missing")
           }
 
-          file.data.yaya.internalLinks.push({
+          if (selfLink) {
+            if (!properties.class) properties.class = []
+            properties.class.push("wiki-is-selflink")
+          }
+
+          file.data.internalLinks.push({
             missing,
+            selfLink,
             href: properties.href,
             page: href.pathname,
             text,
@@ -51,7 +69,7 @@ const yaya = ({ allPages }) => (tree, file) => {
           properties.target = "_blank"
           if (!properties.rel) properties.rel = []
           properties.rel.push("noopener", "noreferrer")
-          file.data.yaya.externalLinks.push({
+          file.data.externalLinks.push({
             href: properties.href,
             text,
           })
@@ -63,10 +81,10 @@ const yaya = ({ allPages }) => (tree, file) => {
       }
     }
   )
-  if (file.data.yaya.internalLinks.length)
-    file.info(`Found ${file.data.yaya.internalLinks.length} local links.`)
-  if (file.data.yaya.externalLinks.length)
-    file.info(`Found ${file.data.yaya.externalLinks.length} external links.`)
+  if (file.data.internalLinks.length)
+    file.info(`Found ${file.data.internalLinks.length} local links.`)
+  if (file.data.externalLinks.length)
+    file.info(`Found ${file.data.externalLinks.length} external links.`)
 }
 
 module.exports = yaya
