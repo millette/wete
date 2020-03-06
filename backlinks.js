@@ -37,7 +37,7 @@ const run = async (pathname) => {
 
   oy.internalLinks.forEach((obj) => {
     if (
-      vfout.data.yaya.internalLinks
+      vfout.data.internalLinks
         .filter(({ missing }) => !missing)
         .map(({ page }) => page)
         .indexOf(obj.page) === -1
@@ -50,7 +50,7 @@ const run = async (pathname) => {
   const newLinks = []
   const newBacklinks = []
 
-  vfout.data.yaya.internalLinks.forEach(({ missing, ...obj }) => {
+  vfout.data.internalLinks.forEach(({ missing, ...obj }) => {
     newLinks.push(obj)
     if (
       !missing &&
@@ -67,7 +67,7 @@ const run = async (pathname) => {
     ...oy,
     cnt: vfout.contents,
     internalLinks: newLinks,
-    externalLinks: vfout.data.yaya.externalLinks,
+    externalLinks: vfout.data.externalLinks,
   }
 
   const type = "put"
