@@ -14,6 +14,8 @@ const yaya = (opts = {}) => (tree, file) => {
       : opts.allPages
     : new Set()
 
+  allPages.add("/")
+
   const currentPage = file.pathname
   // allPages.push(currentPage)
   allPages.add(currentPage)
