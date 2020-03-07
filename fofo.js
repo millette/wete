@@ -26,7 +26,7 @@ const doit = (vf) => {
   const type = "put"
   const page = value.pathname.slice(1)
   const key = prefixed("page-version", page, value.updatedAt)
-  return [
+  const batch = [
     {
       type,
       key,
@@ -37,12 +37,16 @@ const doit = (vf) => {
       key: prefixed("page", page),
       value: key,
     },
-    {
+  ]
+
+  if (!value.stub)
+    batch.push({
       type,
       key: prefixed("change", value.updatedAt, page),
       value: value.editor,
-    },
-  ]
+    })
+
+  return batch
 }
 
 const obj2vfile = (doc) => {
@@ -74,6 +78,43 @@ const obj2vfile = (doc) => {
   })
 }
 
+/*
+const createStub = async (newDoc) => {
+  newDoc = obj2vfile(newDoc)
+  newDoc.data.creator = newDoc.data.editor
+  newDoc.data.createdAt = newDoc.data.updatedAt
+  newDoc.data.stub = true
+  return processor(newDoc)
+}
+*/
+
+const createStub = async (pathname, originDoc) => {
+  if (!(originDoc instanceof Vfile))
+    throw new Error("Wrong originDoc type (Vfile).")
+
+  // const processor = makeProcessor()
+  if (pathname[0] !== "/") pathname = `/${pathname}`
+  if (
+    !originDoc.data.internalLinks
+      // .filter(({ stub, pathname: p }) => stub)
+      .map(({ stub, pathname: p }) => stub && p === pathname && pathname)
+      .filter(Boolean)[0]
+  )
+    throw new Error("Pathname not found in originDoc.")
+
+  const page = originDoc.pathname.slice(1) || "home"
+  const newDoc = obj2vfile({
+    contents: `<p>Stub originating from <a href="${originDoc.pathname}">${page}</a>.</p>`,
+    editor: originDoc.data.editor,
+    pathname,
+  })
+
+  newDoc.data.creator = newDoc.data.editor
+  newDoc.data.createdAt = newDoc.data.updatedAt
+  newDoc.data.stub = true
+  return processor(newDoc)
+}
+
 const updatePage = async (newDoc, oldDoc) => {
   if (oldDoc && !(oldDoc instanceof Vfile))
     throw new Error("Wrong oldDoc type (Vfile).")
@@ -88,6 +129,7 @@ const updatePage = async (newDoc, oldDoc) => {
 }
 
 module.exports = {
+  createStub,
   updatePage,
   vfile2obj,
   doit,
