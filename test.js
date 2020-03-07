@@ -59,7 +59,7 @@ test("update page", async () => {
   expect(asBatch[1].key).toBe("page:")
 })
 
-test.only("update links", async () => {
+test("update links", async () => {
   const oldDoc = await fofo.updatePage({
     updatedAt: 1583447300000,
     editor: "bob",
@@ -102,4 +102,24 @@ test.only("update links", async () => {
   expect(asBatch[0].key).toBe(asBatch[1].value)
   expect(asBatch[1].key).toBe("page:")
   */
+})
+
+test("createStub", async () => {
+  const oldDoc = await fofo.updatePage({
+    updatedAt: 1583447300000,
+    editor: "bob",
+    pathname: "/",
+    contents: "<p>Hello <a href='world'>world</a>",
+  })
+
+  const z3 = fofo.doit(oldDoc)
+  expect(z3.length).toBe(3)
+
+  // console.log("Z3", JSON.stringify(z3, null, 2))
+
+  const z = await fofo.createStub("world", oldDoc)
+  const z2 = fofo.doit(z)
+  // console.log("Z2", JSON.stringify(z2, null, 2))
+
+  expect(z2.length).toBe(2)
 })
