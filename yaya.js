@@ -24,6 +24,7 @@ const yaya = (opts = {}) => (tree, file) => {
   }
 
   console.log("knowns", currentPage, allPages)
+  console.log("fileData", JSON.stringify(file.data, null, 2))
 
   selectAll("a", tree).forEach(
     ({ properties, children: [{ value: text }] }) => {
@@ -43,11 +44,13 @@ const yaya = (opts = {}) => (tree, file) => {
 
           const selfLink = currentPage === href.pathname || undefined
           // const missing = (allPages.indexOf(href.pathname) === -1) || undefined
-          const missing = !allPages.has(href.pathname) || undefined
-          if (missing) {
+          const stub = !allPages.has(href.pathname) || undefined
+          /*
+          if (stub) {
             if (!properties.class) properties.class = []
-            properties.class.push("wiki-is-missing")
+            properties.class.push("wiki-is-stub")
           }
+          */
 
           if (selfLink) {
             if (!properties.class) properties.class = []
@@ -55,10 +58,10 @@ const yaya = (opts = {}) => (tree, file) => {
           }
 
           file.data.internalLinks.push({
-            missing,
+            stub,
             selfLink,
             href: properties.href,
-            page: href.pathname,
+            pathname: href.pathname,
             text,
           })
           break

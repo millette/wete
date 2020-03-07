@@ -59,14 +59,17 @@ test("update page", async () => {
   expect(asBatch[1].key).toBe("page:")
 })
 
-/*
-test("update page", async () => {
+test.only("update links", async () => {
   const oldDoc = await fofo.updatePage({
     updatedAt: 1583447300000,
     editor: "bob",
     pathname: "/",
-    contents: "<p>Hello world",
+    contents: "<p>Hello <a href='world'>world</a>",
   })
+
+  const o2 = fofo.doit(oldDoc)
+  // console.log("oldDoc", JSON.stringify(oldDoc, null, 2))
+  // console.log("o2", JSON.stringify(o2, null, 2))
 
   const newDoc = await fofo.updatePage(
     {
@@ -82,6 +85,11 @@ test("update page", async () => {
   } = newDoc
 
   const asBatch = fofo.doit(newDoc)
+  // console.log("newDoc", JSON.stringify(newDoc, null, 2))
+  // console.log("asBatch", JSON.stringify(asBatch, null, 2))
+
+  /*
+
   // console.log("NEWDOC", fofo.doit(newDoc))
 
   expect(contents).toBe("<p>Hello <i>world</i></p>")
@@ -93,5 +101,5 @@ test("update page", async () => {
   expect(asBatch.length).toBe(3)
   expect(asBatch[0].key).toBe(asBatch[1].value)
   expect(asBatch[1].key).toBe("page:")
+  */
 })
-*/

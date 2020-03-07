@@ -5,6 +5,7 @@ const Vfile = require("vfile")
 
 // self
 const makeProcessor = require("./make-processor")
+const diff = require("./diff")
 
 const prefixed = (p, ...rest) => [p, ...rest].join(":")
 
@@ -82,6 +83,8 @@ const updatePage = async (newDoc, oldDoc) => {
   if (oldDoc) newDoc.data.editOf = oldDoc.data.updatedAt
 
   return processor(newDoc)
+
+  // diff
 }
 
 module.exports = {
