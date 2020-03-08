@@ -19,3 +19,9 @@ There are two main types:
 
 - `Vfile` for `unified()` processing
 - JSON for db batches
+
+The `Vfile` object must hold all necessary info for a complete processing.
+
+## Pipeline
+
+A `processor` takes a Vfile as input and outputs a Vfile.
