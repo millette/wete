@@ -57,7 +57,7 @@
     "mdast-normalize-headings": "^2.0.0",
     "neverland": "^3.1.7",
     "pell": "^1.0.6",
-    "prompts": "^2.3.1",
+    "prompts": "^2.3.2",
     "rehype-dom-parse": "^2.0.1",
     "rehype-parse": "^6.0.2",
     "rehype-remark": "^7.0.0",
