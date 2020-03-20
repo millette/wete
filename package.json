@@ -45,7 +45,7 @@
     "deepmerge": "^4.2.2",
     "dotenv-safe": "^8.2.0",
     "encoding-down": "^6.3.0",
-    "fastify": "^2.12.1",
+    "fastify": "^2.13.0",
     "fastify-compress": "^2.0.1",
     "fastify-cookie": "^3.6.0",
     "fastify-leveldb": "millette/fastify-leveldb#fix-uncaught-init-errors",
