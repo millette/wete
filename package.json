@@ -25,7 +25,7 @@
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
-    "parcel": "^2.0.0-nightly.154",
+    "parcel": "^2.0.0-nightly.157",
     "prettier": "^1.19.1",
     "sass": "^1.26.3"
   },
