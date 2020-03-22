@@ -2,7 +2,6 @@
   "useTabs": false,
   "semi": false,
   "trailingComma": "es5",
-  "arrowParens": "always",
   "overrides": [
     {
       "files": "*.md",
