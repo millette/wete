@@ -1,0 +1,24 @@
+@use "../node_modules/pell/src/pell";
+
+@import "../node_modules/bulmaswatch/superhero/_variables";
+@import "../node_modules/bulma/bulma";
+@import "../node_modules/bulmaswatch/superhero/_overrides";
+
+#app-actions {
+  margin-top: -2rem;
+  margin-bottom: 1rem;
+}
+
+.pell-content {
+  margin-top: 1rem;
+  height: auto;
+  padding: 0;
+}
+
+.is-active {
+  .rym-bg {
+    padding: 0 0.25rem;
+    background: $body-background-color;
+    color: $tabs-link-active-color;
+  }
+}
