@@ -1,8 +1,8 @@
 @use "../node_modules/pell/src/pell";
 
-@import "../node_modules/bulmaswatch/superhero/_variables";
+@import "../node_modules/bulmaswatch/cerulean/_variables";
 @import "../node_modules/bulma/bulma";
-@import "../node_modules/bulmaswatch/superhero/_overrides";
+@import "../node_modules/bulmaswatch/cerulean/_overrides";
 
 #app-actions {
   margin-top: -2rem;
