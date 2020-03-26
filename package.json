@@ -62,6 +62,7 @@
     "neverland": "^3.1.7",
     "pell": "^1.0.6",
     "prompts": "^2.3.2",
+    "purgecss": "^2.1.0",
     "rehype-dom-parse": "^2.0.1",
     "rehype-parse": "^6.0.2",
     "rehype-remark": "^8.0.0",
