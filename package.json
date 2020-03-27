@@ -3,14 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "start": "node server",
-    "clean": "rm -fr .parcel-cache dist",
-    "css": "sass -s compressed style.scss style-sassed.css",
-    "purgecss": "purgecss --css style-sassed.css --content dist/index.html dist/main.min.js -o dist/",
-    "purgecss-parcel": "purgecss --css dist/style.*.css --content dist/index.html dist/main.*.js -o dist",
-    "dev": "parcel --log-level info --no-autoinstall index.html",
-    "build": "rollup -c rollup.config.js",
-    "build-parcel": "parcel build --log-level info --no-source-maps index.html",
-    "deploy": "parcel build --log-level info --no-source-maps --public-url /wete index.html && gh-pages -d dist",
     "test": "jest",
     "posttest": "npm run format",
     "format": "prettier --ignore-path .gitignore --loglevel warn --write \"**/*.{js,css,md,html,json}\"",
@@ -21,11 +13,9 @@
   "author": "Robin Millette <robin@millette.info> (http://robin.millette.info/)",
   "license": "AGPL-3.0",
   "devDependencies": {
-    "gh-pages": "^2.2.0",
     "husky": "^4.2.3",
     "jest": "~25.1.0",
     "lint-staged": "^10.0.9",
-    "parcel": "^2.0.0-nightly.180",
     "prettier": "^2.0.2",
     "sass": "^1.26.3"
   },
