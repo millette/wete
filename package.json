@@ -16,8 +16,7 @@
     "husky": "^4.2.3",
     "jest": "~25.1.0",
     "lint-staged": "^10.0.9",
-    "prettier": "^2.0.2",
-    "sass": "^1.26.3"
+    "prettier": "^2.0.2"
   },
   "husky": {
     "hooks": {
@@ -64,6 +63,7 @@
     "remark-stringify": "^7.0.4",
     "rollup": "^2.2.0",
     "rollup-plugin-terser": "^5.3.0",
+    "sass": "^1.26.3",
     "streamtoarray": "^3.0.0",
     "to-vfile": "^6.1.0",
     "unified": "^8.4.2",
