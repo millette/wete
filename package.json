@@ -40,7 +40,7 @@
   "dependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
-    "bulma": "^0.8.0",
+    "bulma": "^0.8.1",
     "bulmaswatch": "^0.8.0",
     "deepmerge": "^4.2.2",
     "dotenv-safe": "^8.2.0",
