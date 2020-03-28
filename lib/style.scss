@@ -22,3 +22,8 @@
     color: $tabs-link-active-color;
   }
 }
+
+aside.menu {
+  position: sticky;
+  top: 2rem;
+}
