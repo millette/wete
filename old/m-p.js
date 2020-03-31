@@ -7,13 +7,15 @@ const sanitize = require("rehype-sanitize")
 const stringify = require("rehype-stringify")
 
 // self
-const yaya = require("./yaya")
+const yaya2 = require("./yaya2")
 
-const makeProcessor = (allPages) =>
-  unified()
-    .use(parse)
-    .use(sanitize)
-    .use(yaya, { allPages })
-    .use(stringify).process
+const makeProcessor = () => {
+  const p = unified().use(parse).use(sanitize).use(yaya).use(stringify).process
+
+  return async (x) => {
+    const ret = await p(x)
+    return WikiFile(ret)
+  }
+}
 
 module.exports = makeProcessor

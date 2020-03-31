@@ -12,6 +12,4 @@ const db = level("db", {
 
 const lala = () => getPrefixedKeys(db, "page-version")
 
-lala()
-  .then(console.log)
-  .catch(console.error)
+lala().then(console.log).catch(console.error)

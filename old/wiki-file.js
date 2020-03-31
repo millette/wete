@@ -74,6 +74,4 @@ class WikiFile extends Vfile {
 const log = (x) => console.log(x.page, JSON.stringify(x, null, 2))
 
 const wf = new WikiFile({ page: "home" })
-wf.setContents("<p>rah")
-  .then(log)
-  .catch(console.error)
+wf.setContents("<p>rah").then(log).catch(console.error)

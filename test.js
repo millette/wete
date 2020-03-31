@@ -1,125 +1,70 @@
 "use strict"
 
-const fofo = require("./fofo")
+// npm
+const Vfile = require("vfile")
+
+// self
+const makeProcessor = require("./utils")
+const Context = require("./context")
 
 test("create page", async () => {
-  const doc = {
-    editor: "bob",
-    pathname: "",
-    contents: "<p>Hello world",
-  }
+  const ctx = new Context()
 
-  const ddd = await fofo.updatePage(doc)
-  const {
-    data: { creator, createdAt, updatedAt },
-    pathname,
-    contents,
-  } = ddd
+  const p = makeProcessor(ctx)
 
-  // console.log("DDD", ddd)
-  expect(contents).toBe("<p>Hello world</p>")
-  expect(creator).toBe(doc.editor)
-  expect(createdAt).toBeTruthy()
-  expect(createdAt).toBe(updatedAt)
-  expect(pathname).toBe("/")
-})
-
-test("update page", async () => {
-  const oldDoc = await fofo.updatePage({
-    updatedAt: 1583447300000,
-    editor: "bob",
-    pathname: "/",
-    contents: "<p>Hello world",
-  })
-
-  const newDoc = await fofo.updatePage(
-    {
-      contents: "<p>Hello <i>world",
-      editor: "joe",
-      pathname: "",
-    },
-    oldDoc
+  const dd = await p(
+    "<p>dudu <a href='cnt?hop'>Cnt</a>",
+    "joe",
+    "newpage",
+    true
   )
-  const {
-    data: { editOf, creator, createdAt, updatedAt },
-    contents,
-  } = newDoc
 
-  const asBatch = fofo.doit(newDoc)
-  // console.log("NEWDOC", fofo.doit(newDoc))
+  const d1 = dd.docs.get("/newpage")
 
-  expect(contents).toBe("<p>Hello <i>world</i></p>")
-  expect(creator).toBe(oldDoc.data.editor)
-  expect(editOf).toBe(oldDoc.data.updatedAt)
-  expect(createdAt).toBe(oldDoc.data.updatedAt)
-  expect(updatedAt > createdAt).toBeTruthy()
+  expect(d1 instanceof Vfile).toBeTruthy()
+  expect(d1.data.internalLinks.length).toBe(1)
 
-  expect(asBatch.length).toBe(3)
-  expect(asBatch[0].key).toBe(asBatch[1].value)
-  expect(asBatch[1].key).toBe("page:")
-})
+  expect(d1.toString()).toBe(`<p>dudu <a href="/cnt?hop">Cnt</a></p>`)
 
-test("update links", async () => {
-  const oldDoc = await fofo.updatePage({
-    updatedAt: 1583447300000,
-    editor: "bob",
-    pathname: "/",
-    contents: "<p>Hello <a href='world'>world</a>",
-  })
+  const d2 = dd.docs.get("/cnt")
 
-  const o2 = fofo.doit(oldDoc)
-  // console.log("oldDoc", JSON.stringify(oldDoc, null, 2))
-  // console.log("o2", JSON.stringify(o2, null, 2))
+  expect(d2 instanceof Vfile).toBeTruthy()
+  expect(d2.data.internalLinks.length).toBe(1)
 
-  const newDoc = await fofo.updatePage(
-    {
-      contents: "<p>Hello <i>world",
-      editor: "joe",
-      pathname: "",
-    },
-    oldDoc
+  expect(d2.toString()).toBe(
+    `<p>Stub of <code>cnt</code> from <code><a href="/newpage">newpage (Cnt)</a></code> by <code>joe</code>.</p>`
   )
-  const {
-    data: { editOf, creator, createdAt, updatedAt },
-    contents,
-  } = newDoc
-
-  const asBatch = fofo.doit(newDoc)
-  // console.log("newDoc", JSON.stringify(newDoc, null, 2))
-  // console.log("asBatch", JSON.stringify(asBatch, null, 2))
-
-  /*
-
-  // console.log("NEWDOC", fofo.doit(newDoc))
-
-  expect(contents).toBe("<p>Hello <i>world</i></p>")
-  expect(creator).toBe(oldDoc.data.editor)
-  expect(editOf).toBe(oldDoc.data.updatedAt)
-  expect(createdAt).toBe(oldDoc.data.updatedAt)
-  expect(updatedAt > createdAt).toBeTruthy()
-
-  expect(asBatch.length).toBe(3)
-  expect(asBatch[0].key).toBe(asBatch[1].value)
-  expect(asBatch[1].key).toBe("page:")
-  */
 })
 
-test("createStub", async () => {
-  const oldDoc = await fofo.updatePage({
-    updatedAt: 1583447300000,
-    editor: "bob",
-    pathname: "/",
-    contents: "<p>Hello <a href='world'>world</a>",
-  })
+test("update page #1", async () => {
+  const ctx = new Context()
 
-  const z3 = fofo.doit(oldDoc)
-  expect(z3.length).toBe(3)
+  const p = makeProcessor(ctx)
 
-  // console.log("Z3", JSON.stringify(z3, null, 2))
+  const dd0 = await p("bobo-cnt", "bob", "home")
+  const dd = dd0.docs.get("/home")
+  expect(dd instanceof Vfile).toBeTruthy()
+  expect(dd.data.internalLinks).toBeFalsy()
+  expect(dd.data.editOf).toBeTruthy()
+})
 
-  const z = await fofo.createStub("world", oldDoc)
-  const z2 = fofo.doit(z)
-  // console.log("Z2", JSON.stringify(z2, null, 2))
+test("update page #2", async () => {
+  const ctx = new Context()
 
-  expect(z2.length).toBe(2)
+  const p = makeProcessor(ctx)
+
+  const dd = await p(
+    "<p>dudu <a href='cnt?hop'>Cnt</a>",
+    "joe",
+    "newpage",
+    true
+  )
+
+  const dd1 = dd.docs.get("/newpage")
+
+  const dd2 = await p("<p>dudu <a href='home'>Cnt</a>", "joe", dd1)
+
+  expect(dd2.docs.size).toBe(2)
+  expect(dd2.wholeBatch.length).toBe(8)
+  expect(dd2.wholeBatch.filter(({ type }) => type === "del").length).toBe(1)
 })

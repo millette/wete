@@ -115,28 +115,7 @@ const Actions = $((un) => {
   return c
 })
 
-const pageRe = /^\/(_[a-zA-Z0-9]+\/)?[a-zA-Z0-9]+$/
-
 const showActions = (un) => {
-  const page = window.location.pathname // .slice(1)
-  if (!pageRe.test(page)) {
-    const $menu = document.querySelector("aside.menu > ul")
-    $menu.innerHTML =
-      page === "/"
-        ? "<li><a class='is-active' href='/'>Home</a></li><li><a href='/_recent'>Recent changes</a></li>"
-        : "<li><a href='/'>Home</a></li><li><a class='is-active' href='/_recent'>Recent changes</a></li>"
-    return
-  }
-
-  if (page.split("/").length === 3) {
-    document
-      .querySelectorAll("aside.menu a.is-active")
-      .forEach((el) => el.classList.remove("is-active"))
-    document
-      .querySelector(`aside.menu a[href="${page}"]`)
-      .classList.add("is-active")
-    return
-  }
   const c = Actions(un)
   const $cnt = document.getElementById("cnt")
   const $x = $cnt.parentNode.insertBefore(document.createElement("div"), $cnt)

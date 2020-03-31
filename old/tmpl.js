@@ -33,6 +33,4 @@ const elOutput = ({ contents }) => {
   console.log("`" + contents.replace(/`/g, "`") + "`")
 }
 
-processor(cnt)
-  .then(elOutput)
-  .catch(console.error)
+processor(cnt).then(elOutput).catch(console.error)
