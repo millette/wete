@@ -116,11 +116,12 @@ init() // db-web-v1
         ).toUTCString()} by <code>${value}</code></li>`
       })
 
-      const contents = `<h2>Recent changes</h2><ul>${list.join("")}</ul>`
+      const title = "Recent changes"
+      const contents = `<h2>${title}</h2><ul>${list.join("")}</ul>`
 
       // return contents
 
-      return tad("", "Recent changes - wete", "Recent changes", contents)
+      return tad("", `${title} - wete`, title, contents)
     })
 
     fastify.get("/_history/:page", async (request, reply) => {
@@ -129,11 +130,13 @@ init() // db-web-v1
       const zzz = await api.pageVersions(page)
       reply.type("text/html")
 
-      const title = zzz[0].value.title
+      // const title2 =
       const creator = zzz[0].value.creator
       const ts = zzz[0].value.createdAt
+
+      const title = `${zzz[0].value.title} history`
       // const contents = `<pre>${JSON.stringify(zzz, null, 2)}</pre>`
-      let contents = `<h2>${title} history</h2>
+      let contents = `<h2>${title}</h2>
       <h3>Created by <code>${creator}</code>, ${new Date(ts).toUTCString()}</h3>
       <ol>${zzz
         .map(({ value }) => {
@@ -144,7 +147,7 @@ init() // db-web-v1
         .join("")}
       </ol>
       `
-      return tad(page, `${page} history - wete`, `${page} history`, contents)
+      return tad(page, `${title} - wete`, title, contents)
       /*
       const ret = `<nav style="width: 15rem; display: flex"><a style="flex: auto" href="/">/</a><a style="flex: auto" href="/${page}">v</a><a style="flex: auto" href="/_edit/${page}">ed</a><a style="flex: auto" href="/_backlinks/${page}">bl</a></nav>
     <pre>${JSON.stringify(
@@ -169,7 +172,8 @@ init() // db-web-v1
       return ret
       */
 
-      const contents = `<h2>Backlinks to ${page}</h2><ul>
+      const title = `Backlinks to ${page}`
+      const contents = `<h2>${title}</h2><ul>
       ${zzz.map(({ key, value }) => {
         const k3 = key.split(":")[2]
         return `<li><a href="/${k3}">${k3}</a>, ${new Date(
@@ -177,12 +181,7 @@ init() // db-web-v1
         ).toUTCString()} by <code>${value.editor}</code></li>`
       })}
       </ul>`
-      return tad(
-        page,
-        `Backlinks to ${page} - wete`,
-        `Backlinks to ${page}`,
-        contents
-      )
+      return tad(page, `${title} - wete`, title, contents)
     })
 
     fastify.get("/_edit/:page", async (request, reply) => {
@@ -227,12 +226,19 @@ init() // db-web-v1
     })
 
     fastify.get("/:page", async (request, reply) => {
+      const n = Date.now()
       const api = new DbApi(fastify.level)
       const page = request.params.page
       const zzz = await api.pageLatest(page)
       reply.type("text/html")
-
       return tad(page, `${page} - wete`, page, zzz.value.contents)
+
+      /*
+      const cc = tad(page, `${page} - wete`, page, zzz.value.contents)
+      const n2 = Date.now() - n
+      reply.header("x-elapsed", n2)
+      return cc
+      */
     })
 
     /*
