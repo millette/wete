@@ -174,12 +174,14 @@ init() // db-web-v1
 
       const title = `Backlinks to ${page}`
       const contents = `<h2>${title}</h2><ul>
-      ${zzz.map(({ key, value }) => {
-        const k3 = key.split(":")[2]
-        return `<li><a href="/${k3}">${k3}</a>, ${new Date(
-          value.date
-        ).toUTCString()} by <code>${value.editor}</code></li>`
-      })}
+      ${zzz
+        .map(({ key, value }) => {
+          const k3 = key.split(":")[2]
+          return `<li><a href="/${k3}">${k3}</a>, ${new Date(
+            value.date
+          ).toUTCString()} by <code>${value.editor}</code></li>`
+        })
+        .join("")}
       </ul>`
       return tad(page, `${title} - wete`, title, contents)
     })
