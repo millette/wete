@@ -5,6 +5,15 @@ import Cookies from "js-cookie"
 
 // let elEditor
 
+const nm1 = document.querySelector(".navbar-burger")
+const nm2 = document.querySelector(".navbar-menu")
+
+nm1.addEventListener("click", (ev) => {
+  ev.preventDefault()
+  nm1.classList.toggle("is-active")
+  nm2.classList.toggle("is-active")
+})
+
 const Actions = $((un) => {
   let elEditor
   const [editing, setEditing] = useState()
