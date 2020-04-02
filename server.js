@@ -16,6 +16,8 @@ init()
     const DbApi = require("./db-api")
     const tad = require("./tadam")
 
+    const lalalere = require("./first-page")
+
     const checkUserPassword = async (request, reply) => {
       return request.body.name
       /*
@@ -39,27 +41,14 @@ init()
     fastify.register(require("fastify-compress"))
 
     fastify.register(require("fastify-leveldb"), {
-      // name: "db-web-v123a", // : "db-web-v666", // db-web-v1
       name: process.env.DB,
       options: {
         valueEncoding: "json",
       },
     })
 
-    fastify.after(() => {
-      const api = new DbApi(fastify.level)
-      const ctx = new DbContext(fastify.level)
-
-      return api.pageLatest("wiki").catch(() => {
-        const p = makeProcessor(ctx)
-        return p(
-          "<p>Welcome to wete wiki. There's a <a href='/sandbox'>sandbox</a>.</p>",
-          "admin",
-          "wiki",
-          true
-        ).then(({ wholeBatch }) => ctx.processBatch(wholeBatch))
-      })
-    })
+    // fastify.after(lalalere.bind(fastify))
+    fastify.after(lalalere)
 
     fastify.register(require("fastify-cookie"), {
       // secret: "abc123abc123",
