@@ -20,6 +20,10 @@ const config = async () => {
           process.env.DB = "db-web-v3.0.0"
           break
 
+        case "PORT":
+          process.env.PORT = "3000"
+          break
+
         case "SECRET":
           process.env.SECRET = nanoid(32)
           break
@@ -32,6 +36,7 @@ const config = async () => {
     await fs.writeFile(
       ".env",
       `DB=${process.env.DB}
+PORT=${process.env.PORT}
 SECRET=${process.env.SECRET}
 `,
       "utf-8"
