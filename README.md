@@ -28,6 +28,7 @@ The wiki is automatically configured on first launch. These files are created:
 See `.env.example` for the required environment variables.
 
 - `DB` will default to `db-web-v3.0.0` - feel free to change it.
+- `PORT` will hold the http port, defaults to 3000.
 - `SECRET` will hold a randomly generated value to sign cookies.
 
 ### Customizations
