@@ -12,14 +12,12 @@ const DbApi = require("./db-api")
 const unified = require("unified")
 const parse = require("rehype-parse")
 const stringify = require("rehype-stringify")
-const { select } = require("hast-util-select")
+const { selectAll } = require("hast-util-select")
 const toHtml = require("hast-util-to-html")
 
-const heha = () => (tree, file) =>
-  (file.data.firstPage = toHtml({
-    type: "root",
-    children: select("#cnt", tree).children,
-  }).trim())
+const heha = () => (tree, file) => {
+  file.data.firstPage = toHtml(selectAll("#cnt *", tree)).trim()
+}
 
 const processor = unified()
   .use(parse, { emitParseErrors: true })
