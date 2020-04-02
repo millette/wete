@@ -48,6 +48,7 @@
     "lighterhtml": "^3.0.0",
     "mdast-normalize-headings": "^2.0.0",
     "memdown": "^5.1.0",
+    "nanoid": "^3.0.2",
     "neverland": "^3.4.0",
     "pell": "^1.0.6",
     "prompts": "^2.3.2",
