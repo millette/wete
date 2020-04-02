@@ -42,6 +42,7 @@
     "fastify-static": "^2.6.0",
     "hast-util-sanitize": "^2.0.2",
     "hast-util-select": "^4.0.0",
+    "hast-util-to-html": "^7.1.0",
     "js-cookie": "^2.2.1",
     "leveldown": "^5.6.0",
     "levelup": "^4.3.2",
