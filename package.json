@@ -1,5 +1,6 @@
 {
   "name": "wete",
+  "description": "Wiki-engine #38. Zero config, clone and start.",
   "version": "0.0.0",
   "scripts": {
     "start": "node server",
@@ -12,6 +13,9 @@
   },
   "author": "Robin Millette <robin@millette.info> (http://robin.millette.info/)",
   "license": "AGPL-3.0",
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "devDependencies": {
     "husky": "^4.2.3",
     "jest": "~25.1.0",
