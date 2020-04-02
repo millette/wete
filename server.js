@@ -3,7 +3,7 @@
 // self
 const init = require("./init")
 
-init() // db-web-v1
+init()
   .then(() => {
     // self
     const makeProcessor = require("./utils")
@@ -27,9 +27,6 @@ init() // db-web-v1
       */
     }
 
-    // npm
-    // const Vfile = require("vfile")
-    // const memdown = require("memdown")
     const fastify = require("fastify")({
       logger: true,
     })
@@ -39,7 +36,6 @@ init() // db-web-v1
     fastify.register(require("fastify-leveldb"), {
       name: "db-web-v123a", // : "db-web-v666", // db-web-v1
       options: {
-        // store: require("memdown"),
         valueEncoding: "json",
       },
     })
@@ -102,14 +98,10 @@ init() // db-web-v1
 
     fastify.get("/_recent", async (request, reply) => {
       const api = new DbApi(fastify.level)
-      // reply.type("application/json")
       const pages = await api.recentChanges()
       reply.type("text/html")
-      // const contents = `<pre>${JSON.stringify(pages, null, 2)}</pre>`
 
       const list = pages.map(({ key, value }) => {
-        // const p = key.split(":")[1]
-        // return `<li><a href="/${p}">${p}</a></li>`
         const [bah, ts, page] = key.split(":")
         return `<li><a href="/${page}">${page}</a>, ${new Date(
           parseInt(ts, 10)
@@ -118,9 +110,6 @@ init() // db-web-v1
 
       const title = "Recent changes"
       const contents = `<h2>${title}</h2><ul>${list.join("")}</ul>`
-
-      // return contents
-
       return tad("", `${title} - wete`, title, contents)
     })
 
@@ -130,12 +119,10 @@ init() // db-web-v1
       const zzz = await api.pageVersions(page)
       reply.type("text/html")
 
-      // const title2 =
       const creator = zzz[0].value.creator
       const ts = zzz[0].value.createdAt
 
       const title = `${zzz[0].value.title} history`
-      // const contents = `<pre>${JSON.stringify(zzz, null, 2)}</pre>`
       let contents = `<h2>${title}</h2>
       <h3>Created by <code>${creator}</code>, ${new Date(ts).toUTCString()}</h3>
       <ol>${zzz
@@ -148,16 +135,6 @@ init() // db-web-v1
       </ol>
       `
       return tad(page, `${title} - wete`, title, contents)
-      /*
-      const ret = `<nav style="width: 15rem; display: flex"><a style="flex: auto" href="/">/</a><a style="flex: auto" href="/${page}">v</a><a style="flex: auto" href="/_edit/${page}">ed</a><a style="flex: auto" href="/_backlinks/${page}">bl</a></nav>
-    <pre>${JSON.stringify(
-      zzz.map(({ key }) => key),
-      null,
-      2
-    )}</pre>
-    `
-      return ret
-      */
     })
 
     fastify.get("/_backlinks/:page", async (request, reply) => {
@@ -165,12 +142,6 @@ init() // db-web-v1
       const page = request.params.page
       const zzz = await api.pageBacklinks(page)
       reply.type("text/html")
-      /*
-      const ret = `<nav style="width: 15rem; display: flex"><a style="flex: auto" href="/">/</a><a style="flex: auto" href="/${page}">v</a><a style="flex: auto" href="/_edit/${page}">ed</a><a style="flex: auto" href="/_backlinks/${page}">bl</a></nav>
-    <pre>${JSON.stringify(zzz, null, 2)}</pre>
-    `
-      return ret
-      */
 
       const title = `Backlinks to ${page}`
       const contents = `<h2>${title}</h2><ul>
@@ -213,13 +184,9 @@ init() // db-web-v1
 
       const ctx = new DbContext(fastify.level)
       const p = makeProcessor(ctx)
-
       const dd = await p(bod, connected, page)
-
       await ctx.processBatch(dd.wholeBatch)
-
       const d1 = dd.docs.get(`/${page}`)
-
       const bod2 = d1.toString()
 
       if (request.headers["content-type"] === "application/json")
@@ -234,34 +201,19 @@ init() // db-web-v1
       const zzz = await api.pageLatest(page)
       reply.type("text/html")
       return tad(page, `${page} - wete`, page, zzz.value.contents)
-
-      /*
-      const cc = tad(page, `${page} - wete`, page, zzz.value.contents)
-      const n2 = Date.now() - n
-      reply.header("x-elapsed", n2)
-      return cc
-      */
     })
 
     /*
-
-  fastify.post("/api/login", async (request, reply) => {
-    const name = await checkUserPassword(request, reply)
-    reply.setCookie("connected", name, {
-      signed: true,
-      path: "/",
+    fastify.post("/api/login", async (request, reply) => {
+      const name = await checkUserPassword(request, reply)
+      reply.setCookie("connected", name, {
+        signed: true,
+        path: "/",
+      })
+      return { name, hi: "there" }
     })
-    return { name, hi: "there" }
-  })
+    */
 
-  fastify.get("/static/:path", (request, reply) => {
-    if (staticPaths[request.params.path])
-      return reply.sendFile(staticPaths[request.params.path])
-    reply.code(404).send("Not found.")
-  })
-  */
-
-    // Run the server!
     fastify.listen(3000, function (err, address) {
       if (err) {
         fastify.log.error(err)
