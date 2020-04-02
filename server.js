@@ -1,5 +1,10 @@
 "use strict"
 
+const kaput = (e) => {
+  console.error("KAPUT")
+  console.error(e)
+}
+
 // self
 const init = require("./init")
 
@@ -34,7 +39,8 @@ init()
     fastify.register(require("fastify-compress"))
 
     fastify.register(require("fastify-leveldb"), {
-      name: "db-web-v123a", // : "db-web-v666", // db-web-v1
+      // name: "db-web-v123a", // : "db-web-v666", // db-web-v1
+      name: process.env.DB,
       options: {
         valueEncoding: "json",
       },
@@ -56,7 +62,8 @@ init()
     })
 
     fastify.register(require("fastify-cookie"), {
-      secret: "abc123abc123", // process.env.SECRET,
+      // secret: "abc123abc123",
+      secret: process.env.SECRET,
     })
 
     fastify.register(require("fastify-formbody"))
@@ -222,4 +229,4 @@ init()
       fastify.log.info(`server listening on ${address}`)
     })
   })
-  .catch(console.error)
+  .catch(kaput)
