@@ -45,4 +45,8 @@ From the `wete/` directory (after `git clone [...]`) simply:
 node server
 ```
 
-Voilà, the wiki is now listening on localhost:3000.
+Voilà, the wiki is now listening on <http://localhost:3000/>.
+
+There are currently no user accounts. Simply login with a username and any non-empty password to edit pages.
+
+A page is automatically created when you link to it. For instance, head to <http://localhost:3000/wiki> to edit it and add a link to a /sandbox page, like [sandbox](sandbox), save the `/wiki` page and follow the link to `/sandbox` and you should see a stub page there, which you can now edit.
