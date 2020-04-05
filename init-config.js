@@ -10,14 +10,6 @@ const des = require("dotenv-safe")
 // self
 const fromSample = require("./init-from-sample")
 
-/*
-const fromSample = () =>
-  fs.copyFile(src, dest, fs.constants.COPYFILE_EXCL | fs.constants.COPYFILE_FICLONE)
-    .catch((e) => {
-
-    })
-*/
-
 const sampleFiles = async () =>
   Promise.all([fromSample("index.html"), fromSample("style.scss")])
 
