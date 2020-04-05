@@ -12,11 +12,11 @@ const DbApi = require("./db-api")
 const unified = require("unified")
 const parse = require("rehype-parse")
 const stringify = require("rehype-stringify")
-const { selectAll } = require("hast-util-select")
+const { select } = require("hast-util-select")
 const toHtml = require("hast-util-to-html")
 
 const heha = () => (tree, file) => {
-  file.data.firstPage = toHtml(selectAll("#cnt *", tree)).trim()
+  file.data.firstPage = toHtml(select("#cnt", tree).children).trim()
 }
 
 const processor = unified()
