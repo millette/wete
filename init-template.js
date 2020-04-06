@@ -10,7 +10,6 @@ const { mtime } = require("./init-utils")
 const unified = require("unified")
 const parse = require("rehype-parse")
 const stringify = require("rehype-stringify")
-// const { select, selectAll } = require("hast-util-select")
 const { select } = require("hast-util-select")
 
 const heha = () => (tree) => {
@@ -24,36 +23,6 @@ const heha = () => (tree) => {
       value: "${content}",
     },
   ]
-
-  // const gagaga = selectAll("aside.menu > ul > li", tree)
-  // console.log("GAGAGA", gagaga)
-  // console.log("GAGAGA-J", JSON.stringify(gagaga, null, 2))
-
-  /*
-  const rara = select("aside.menu > ul", tree)
-
-  const fofo = "${page ? 'AAA' : 'BBB'}"
-  rara.children = [{
-    type: "text",
-    value: fofo
-  }]
-  */
-
-  /*
-  selectAll("aside.menu > ul > li", tree)
-    // .forEach(({children: [{properties: { href }}]}) => {
-    .forEach(({children}) => {
-      children[0].properties.href = "/yoyo"
-    })
-  */
-
-  /*
-  <ul class="menu-list">
-    <li><a class="is-active" href="/bibi2">View</a></li>
-    <li><a href="/_backlinks/bibi2">Backlinks</a></li>
-    <li><a href="/_versions/bibi2">History</a></li>
-  </ul>
-  */
 }
 
 const processor = unified()
@@ -70,14 +39,6 @@ const write = (ret2) => fs.writeFile("tadam.js", ret2)
 
 const tmpl = () =>
   fs.readFile("index.html", "utf-8").then(processor).then(elOutput).then(write)
-
-/*
-const mtime = async (fn) =>
-  fs
-    .stat(fn)
-    .then(({ mtimeMs }) => mtimeMs)
-    .catch(() => 0)
-*/
 
 const freshTemplate = async () => {
   const fn1 = "tadam.js"
