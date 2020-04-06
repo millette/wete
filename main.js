@@ -43,9 +43,15 @@ const Actions = $((un) => {
       onChange: () => false,
       defaultParagraphSeparator: "p",
       actions: [
+        "heading1",
+        "heading2",
+        "quote",
+        "code",
         "ulist",
+        "olist",
         "bold",
         "italic",
+        /*
         {
           name: "image",
           result: () => {
@@ -53,10 +59,21 @@ const Actions = $((un) => {
             if (url) exec("insertImage", url)
           },
         },
+        */
         {
           name: "link",
           result: () => {
             const url = window.prompt("Enter the link URL")
+            if (url) exec("createLink", url)
+          },
+        },
+
+        {
+          name: "elink",
+          icon: "&#x1F5D7;",
+          title: "External link",
+          result: () => {
+            const url = window.prompt("Enter the external link URL")
             if (url) exec("createLink", url)
           },
         },
