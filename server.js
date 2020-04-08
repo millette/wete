@@ -47,11 +47,9 @@ init()
       },
     })
 
-    // fastify.after(lalalere.bind(fastify))
     fastify.after(lalalere)
 
     fastify.register(require("fastify-cookie"), {
-      // secret: "abc123abc123",
       secret: process.env.SECRET,
     })
 
@@ -78,6 +76,9 @@ init()
     fastify.get("/", async (request, reply) => {
       const api = new DbApi(fastify.level)
       const pages = await api.allPages()
+
+      if (request.headers.accept === "application/json")
+        return pages.map(({ key }) => key.split(":")[1])
 
       const list = pages.map(({ key }) => {
         const p = key.split(":")[1]
