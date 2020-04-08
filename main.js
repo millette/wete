@@ -14,6 +14,154 @@ nm1.addEventListener("click", (ev) => {
   nm2.classList.toggle("is-active")
 })
 
+const refele = $((initialState) => {
+  const [np, setNp] = useState(initialState.selObj.toLowerCase())
+  const [active, setActive] = useState(initialState.active)
+  const [data, setData] = useState([])
+
+  console.log("REFELE", active, initialState, new Date())
+
+  const change = (ev) => {
+    console.log("CHANGE", np, ev.target.value)
+    setNp(ev.target.value)
+  }
+
+  const cancel = () => {
+    console.log("CANCEL")
+    setActive(false)
+  }
+
+  const close = (url) => {
+    console.log("CLOSE", url)
+    if (url) initialState.zap(url)
+    cancel()
+  }
+
+  const save = (ev) => {
+    ev.preventDefault()
+    console.log("SAVE", np)
+    close(np)
+  }
+
+  useEffect(() => {
+    console.log("NOW ACTIVE?", active, initialState)
+    if (active) {
+      ;(async () => {
+        console.log("FETCHING...")
+        const resp = await fetch("/", {
+          headers: { accept: "application/json" },
+        })
+        console.log("FETCHING-got-Resp...")
+        const json = await resp.json()
+        console.log("EL-JSON", json)
+        setData(json)
+      })()
+    }
+  }, [active])
+
+  const elModal = html`
+    <div class="modal${active ? " is-active" : ""}">
+    <form onsubmit=${save}>
+      <div class="modal-background" onclick=${cancel}></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Linking <b>"${
+            initialState.selObj
+          }"</b> to local page:</p>
+        </header>
+        <section class="modal-card-body">
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">New</label>
+              </div>
+
+              <div class="field-body">
+                <div class="field">
+                  <p class="control is-expanded">
+                    <input autofocus class="input" type="text" value="${np}" onchange=${change}>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Existing</label>
+              </div>
+
+              <div class="field-body">
+                <div class="field">
+                  <p class="control is-expanded">
+                    <ul>
+                      ${data.map(
+                        (m) => html`<li>
+                          <button
+                            onclick=${() => close(m)}
+                            type="button"
+                            class="button is-text"
+                          >
+                            ${m}
+                          </button>
+                        </li>`
+                      )}
+                    </ul>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+
+        </section>
+        <footer class="modal-card-foot">
+          <input type="submit" class="button is-success" value="Save changes" />
+          <button onclick=${cancel} class="button">Cancel</button>
+        </footer>
+
+      </div>
+      <button onclick=${cancel} class="modal-close is-large" aria-label="close"></button>
+      </form>
+    </div>
+  `
+
+  // if (!active) setTimeout(() => setActive(true), 1000)
+  // setTimeout(() => setActive(false), 3000)
+  console.log("REFELE-return", new Date()) // , active
+  return elModal
+})
+
+/*
+const makeModal = () => {
+  const elModal = html`
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <div class="modal-card-head">
+        <p class="modal-card-title">Fee Fii Foo</p>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+  `
+
+  const elbod = document.querySelector("body")
+  const ccc = document.createElement("div")
+  ccc.className = "modal"
+  elbod.append(ccc)
+  render(ccc, elModal)
+  return ccc
+}
+
+const elModal = makeModal()
+*/
+
+/*
+setTimeout(() => {
+  elModal.classList.add("is-active")
+  setTimeout(() => {
+    elModal.classList.remove("is-active")
+  }, 2000)
+}, 2000)
+*/
+
 const Actions = $((un) => {
   let elEditor
   const [editing, setEditing] = useState()
@@ -63,8 +211,85 @@ const Actions = $((un) => {
         {
           name: "link",
           result: () => {
-            const url = window.prompt("Enter the link URL")
-            if (url) exec("createLink", url)
+            const sel = window.getSelection()
+            console.log("SEL", sel)
+            const r0 = sel.getRangeAt(0)
+            console.log("SEL-R0", r0)
+
+            const selObj = sel.toString().trim()
+            if (!selObj) return
+            console.log("LINKING!!!", selObj)
+
+            let mod = document.getElementById("rym-link-mod")
+
+            if (!mod) {
+              const elbod = document.querySelector("body")
+              mod = document.createElement("div")
+              mod.id = "rym-link-mod"
+              elbod.append(mod)
+            }
+
+            const zap = (url) => {
+              if (!url) return
+              // only tested on firefox
+              // FIXME: doesn't work on chrome
+              // this is crazy shit anyway
+              const sel2 = window.getSelection()
+              console.log(sel2.anchorNode, sel2)
+              if (sel2.anchorNode) sel.addRange(r0)
+              exec("createLink", url)
+            }
+
+            render(mod, refele({ zap, selObj, active: true }))
+
+            /*
+
+
+
+
+const elModal = html`
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <div class="modal-card-head">
+      <p class="modal-card-title">Fee Fii Foo</p>
+    </div>
+  </div>
+  <button class="modal-close is-large" aria-label="close"></button>
+`
+
+const elbod = document.querySelector("body")
+const ccc = document.createElement("div")
+ccc.className = "modal is-active"
+elbod.append(ccc)
+render(ccc, elModal)
+
+setTimeout(() => {
+  ccc.classList.remove("is-active")
+}, 2000)
+
+
+
+
+*/
+
+            /*
+            if (selObj) {
+              const str = `<div class="modal-background"></div>
+    <div class="modal-content"> Fee Fii Foo
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+
+  `
+              const ddd = document.createElement("div")
+              ddd.classList.add("modal")
+              ddd.classList.add("is-active")
+              ddd.innerHTML = str
+              $par.appendChild(ddd)
+              setTimeout(() => ddd.classList.remove("is-active"), 1000)
+
+              // render(ddd, str)
+            }
+            */
           },
         },
 
