@@ -1,7 +1,7 @@
 {
   "name": "wete",
   "description": "Wiki-engine #38. Zero config, clone and start.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "start": "node server",
     "test": "jest",
