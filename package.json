@@ -62,7 +62,7 @@
     "rehype-parse": "^7.0.1",
     "rehype-sanitize": "^3.0.1",
     "rehype-stringify": "^8.0.0",
-    "rollup": "^2.25.0",
+    "rollup": "^2.26.0",
     "rollup-plugin-terser": "^7.0.0",
     "sass": "^1.26.10",
     "streamtoarray": "^3.0.0",
