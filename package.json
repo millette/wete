@@ -19,7 +19,7 @@
   "devDependencies": {
     "husky": "^4.2.5",
     "jest": "~25.1.0",
-    "lint-staged": "^10.1.7",
+    "lint-staged": "^10.2.11",
     "prettier": "^2.0.5"
   },
   "husky": {
@@ -41,7 +41,7 @@
     "fastify": "^2.15.3",
     "fastify-compress": "^2.0.1",
     "fastify-cookie": "^3.6.1",
-    "fastify-formbody": "^3.1.0",
+    "fastify-formbody": "^3.2.0",
     "fastify-leveldb": "^2.1.0",
     "fastify-static": "^2.7.0",
     "hast-util-sanitize": "^2.0.3",
@@ -57,20 +57,20 @@
     "neverland": "^3.4.1",
     "pell": "^1.0.6",
     "prompts": "^2.3.2",
-    "purgecss": "^2.1.2",
+    "purgecss": "^2.3.0",
     "rehype-dom-parse": "^2.0.1",
     "rehype-parse": "^6.0.2",
     "rehype-sanitize": "^3.0.1",
     "rehype-stringify": "^7.0.0",
-    "rollup": "^2.7.6",
+    "rollup": "^2.25.0",
     "rollup-plugin-terser": "^7.0.0",
     "sass": "^1.26.10",
     "streamtoarray": "^3.0.0",
     "to-vfile": "^6.1.0",
-    "unified": "^9.0.0",
+    "unified": "^9.1.0",
     "unist-util-select": "^3.0.1",
     "unist-util-visit": "^2.0.3",
-    "vfile": "^4.1.1",
+    "vfile": "^4.2.0",
     "vfile-reporter": "^6.0.1"
   }
 }
